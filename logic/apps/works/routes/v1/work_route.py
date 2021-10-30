@@ -8,12 +8,15 @@ blue_print = Blueprint('works', __name__, url_prefix='/api/v1/works')
 @blue_print.route('/', methods=['POST'])
 def exec():
 
-    params_dict = yaml.load(request.data, Loader=yaml.FullLoader) if _is_yaml(
-        request.data) else request.json
+    id = request.form['id']
+    files_dict = {
+        k: v.read()
+        for k, v in request.files.items()
+    }
 
-    id = work_service.start(params_dict)
+    work_service.start(id, files_dict)
 
-    return jsonify(id=id), 201
+    return '', 201
 
 
 @blue_print.route('/<id>/logs', methods=['GET'])
