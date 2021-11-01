@@ -1,8 +1,7 @@
 FROM python:3.9-alpine3.14
 
-COPY resources/oc.zip /usr/bin/
-RUN unzip /usr/bin/oc.zip
-RUN rm -fr /usr/bin/oc.zip
+ADD resources/oc.tar.gz /usr/bin/
+RUN ls /usr/bin/
 
 ARG ARG_VERSION=local
 
