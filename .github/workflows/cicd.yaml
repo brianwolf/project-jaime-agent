@@ -39,7 +39,7 @@ jobs:
         context: ./
         file: ./Dockerfile
         tags: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.APP_NAME }}:${{ needs.get-version.outputs.version }},${{ secrets.DOCKER_USERNAME }}/${{ secrets.APP_NAME }}:latest
-        platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
+        platforms: linux/amd64
         build-args: ARG_VERSION=${{ needs.get-version.outputs.version }}
     outputs:
       version: ${{ needs.get-version.outputs.version }}
