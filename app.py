@@ -8,6 +8,7 @@ from logic.apps.jaime.services.jaime_service import connect_with_jaime
 from logic.apps.works.services.work_garbage_collector import \
     start_garbage_thread
 from logic.libs.variables.variables import get_var
+from logic.libs.logger.logger import logger
 
 app = Flask(__name__)
 
@@ -18,9 +19,9 @@ setup_rest(app)
 connect_with_jaime()
 start_garbage_thread()
 
-print("\n\n")
-print("> ¿Si? señora")
-print("""
+logger().info("\n\n")
+logger().info("> ¿Si? señora")
+logger().info("""
 
                           `+yhyo-                           
                      `.-:/NMMMMMMo/:--`                     
