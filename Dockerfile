@@ -1,5 +1,8 @@
 FROM python:3.9-alpine3.14
 
+ADD resources/oc.tar.gz /usr/bin/
+RUN ls /usr/bin/
+
 ARG ARG_VERSION=local
 
 ENV VERSION=${ARG_VERSION}
