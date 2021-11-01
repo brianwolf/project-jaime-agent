@@ -1,3 +1,4 @@
+import subprocess
 import time
 from threading import Thread
 
@@ -32,7 +33,8 @@ def _thread_func():
             try:
                 url = get_var(Vars.JAIME_URL) + '/api/v1/agents/'
                 payload = {
-                    'host': get_var(Vars.PYTHON_HOST),
+                    'host': subprocess.getoutput('hostname -I').split(" ")[0],
+                    # 'host': subprocess.getoutput("awk 'END{print $1}' /etc/hosts"),
                     'port': get_var(Vars.PYTHON_PORT),
                     'type': get_var(Vars.AGENT_TYPE).upper(),
                 }

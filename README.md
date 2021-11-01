@@ -1,11 +1,6 @@
-# :card_index_dividers: project-jaime
+# :card_index_dividers: project-jaime-agent
 
-> Herramienta para migrar jenkins de un cluster de openshift a otro
-
-- Jaimeeehhhh...!!!
-- ¿Si, señora?
-- El OCS necesita CI/CD y no hay Jenkins
-- Por eso siempre traigo scripts
+> Agente de Jaime para usar OC
 
 ![alt](img/jaime.png)
 
