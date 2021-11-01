@@ -25,26 +25,3 @@ def logs(id: str):
     result = work_service.get_logs(id)
 
     return result, 200
-
-
-@blue_print.route('/<id>', methods=['DELETE'])
-def delete(id: str):
-
-    work_service.delete(id)
-    return '', 200
-
-
-@blue_print.route('/', methods=['GET'])
-def get():
-
-    result = work_service.list_all()
-    return jsonify(result), 200
-
-
-def _is_yaml(text: str) -> bool:
-    try:
-        yaml.load(request.data, Loader=yaml.FullLoader)
-        return True
-
-    except Exception:
-        return False

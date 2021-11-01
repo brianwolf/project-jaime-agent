@@ -34,7 +34,7 @@ def _thread_func():
                 payload = {
                     'host': get_var(Vars.PYTHON_HOST),
                     'port': get_var(Vars.PYTHON_PORT),
-                    'type': get_var(Vars.AGENT_TYPE),
+                    'type': get_var(Vars.AGENT_TYPE).upper(),
                 }
                 requests.post(url, json=payload, timeout=5)
                 connect_with_jaime = True
