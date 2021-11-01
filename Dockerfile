@@ -1,7 +1,4 @@
-FROM python:3.9-alpine3.14
-
-ADD resources/oc.tar.gz /usr/bin/
-RUN ls /usr/bin/
+FROM python:3.9-slim
 
 ARG ARG_VERSION=local
 
@@ -16,3 +13,6 @@ WORKDIR /home/src
 
 COPY . .
 RUN pip install -r requirements.txt --upgrade pip
+
+ADD resources/oc.tar.gz /usr/local/bin/
+RUN rm -fr resources
