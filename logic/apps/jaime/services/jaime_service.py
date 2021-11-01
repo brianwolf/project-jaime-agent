@@ -25,7 +25,7 @@ def _thread_func():
         if connect_with_jaime:
             try:
                 url = get_var(Vars.JAIME_URL)
-                requests.get(url, timeout=5)
+                requests.get(url, timeout=5, verify=False)
             except Exception:
                 logger().error(f'Se perdio la coneccion con Jaime -> reintentando en 5 seg')
                 connect_with_jaime = False
@@ -33,12 +33,11 @@ def _thread_func():
             try:
                 url = get_var(Vars.JAIME_URL) + '/api/v1/agents/'
                 payload = {
-                    'host': subprocess.getoutput('hostname -I').split(" ")[0],
-                    # 'host': subprocess.getoutput("awk 'END{print $1}' /etc/hosts"),
+                    'host': subprocess.getoutput("awk 'END{print $1}' /etc/hosts"),
                     'port': get_var(Vars.PYTHON_PORT),
                     'type': get_var(Vars.AGENT_TYPE).upper(),
                 }
-                requests.post(url, json=payload, timeout=5)
+                requests.post(url, json=payload, timeout=5, verify=False)
                 connect_with_jaime = True
                 logger().info(
                     f"Coneccion exitosa con Jaime -> URL: {get_var(Vars.JAIME_URL)}")
