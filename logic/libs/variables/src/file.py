@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, final
 
 
 def make_vars_dict(file_path: str) -> Dict[str, str]:
@@ -7,19 +7,23 @@ def make_vars_dict(file_path: str) -> Dict[str, str]:
     parametro parseadas con sus respectivas variables de ambiente
     """
     with open(file_path, 'r') as archivo:
-        renglones_archivo = archivo.readlines()
+        lines_file = archivo.readlines()
 
-    diccionario_variables = {}
-    for renglon in renglones_archivo:
+    vars_dict = {}
+    for line in lines_file:
 
-        if renglon.startswith('#') or renglon == '\n':
+        if line.startswith('#') or line == '\n':
             continue
 
-        clave, valor = renglon.split('=')
+        key, value = line.split('=')
 
-        if '#' in valor:
-            valor = valor[:valor.index('#')].strip()
+        if '#' in value:
+            value = value[:value.index('#')].strip()
 
-        diccionario_variables[clave] = valor.replace('\n', '')
+        final_value = value.replace('\n', '')
+        if final_value == 'true' or final_value == 'false':
+            final_value = bool(final_value)
 
-    return diccionario_variables
+        vars_dict[key] = final_value
+
+    return vars_dict
