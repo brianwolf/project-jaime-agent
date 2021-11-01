@@ -50,16 +50,76 @@
 											]
 										},
 										"url": {
-											"raw": "localhost:5000/api/v1/works/",
+											"raw": "localhost:7000/api/v1/works/",
 											"host": [
 												"localhost"
 											],
-											"port": "5000",
+											"port": "7000",
 											"path": [
 												"api",
 												"v1",
 												"works",
 												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "logs",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "id",
+													"value": "282c2388b49b",
+													"type": "text"
+												},
+												{
+													"key": "tools.py",
+													"type": "file",
+													"src": "/home/brian/.jaime/modules/tools.py"
+												},
+												{
+													"key": "module.py",
+													"type": "file",
+													"src": "/home/brian/.jaime/modules/test.py"
+												},
+												{
+													"key": "servers.yaml",
+													"type": "file",
+													"src": "/home/brian/.jaime/servers.yaml"
+												},
+												{
+													"key": "params.yaml",
+													"type": "file",
+													"src": "/home/brian/.jaime/params.yaml"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{project-jaime-agent}}/api/v1/works/:id/logs",
+											"host": [
+												"{{project-jaime-agent}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"works",
+												":id",
+												"logs"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "282c2388b49b"
+												}
 											]
 										}
 									},
