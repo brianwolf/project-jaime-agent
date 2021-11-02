@@ -18,7 +18,6 @@ def connect_with_jaime():
 def _thread_func():
 
     connect_with_jaime = False
-    status_code = 0
 
     while _THREAD_CONNECTION_JAIME_ACTIVE:
 
