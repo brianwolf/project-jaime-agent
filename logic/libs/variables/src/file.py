@@ -21,8 +21,8 @@ def make_vars_dict(file_path: str) -> Dict[str, str]:
             value = value[:value.index('#')].strip()
 
         final_value = value.replace('\n', '')
-        if final_value == 'true' or final_value == 'false':
-            final_value = bool(final_value)
+        if final_value.lower() == 'true' or final_value.lower() == 'false':
+            final_value = final_value.lower() == 'true'
 
         vars_dict[key] = final_value
 

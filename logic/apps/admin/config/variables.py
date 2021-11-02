@@ -1,6 +1,6 @@
 from enum import Enum
 
-from logic.libs.variables.variables import Config, get_var, setup
+from logic.libs.variables.variables import Config, setup, get_var
 
 
 class Vars(Enum):
@@ -11,6 +11,7 @@ class Vars(Enum):
     LOGS_BACKUPS = 'LOGS_BACKUPS'
     AGENT_TYPE = 'AGENT_TYPE'
     JAIME_URL = 'JAIME_URL'
+    RUN_ON_DOCKER = 'RUN_ON_DOCKER'
 
 
 def setup_vars():

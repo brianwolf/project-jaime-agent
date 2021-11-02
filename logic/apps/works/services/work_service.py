@@ -1,7 +1,9 @@
 
 import subprocess
-from typing import Dict, List
+from typing import Any, Dict, List
 
+import requests
+from logic.apps.admin.config.variables import Vars, get_var
 from logic.apps.filesystem.services import workingdir_service
 from logic.libs.logger.logger import logger
 
@@ -33,8 +35,12 @@ def _exec(id: str):
 
     base_path = workingdir_service.fullpath(id)
 
-    subprocess.run(
-        f'cd {base_path} && python3 {_NAME_FILE_TO_EXECUTE} > {_NAME_FILE_LOGS}', shell=True)
+    cmd = f'cd {base_path} && python3 {_NAME_FILE_TO_EXECUTE} > {_NAME_FILE_LOGS}'
+
+    process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+    process.wait()
+
+    _notify_work_end(id)
 
 
 def get_logs(id: str) -> str:
@@ -51,3 +57,9 @@ def list_all_running() -> List[str]:
 def delete(id: str):
     global _WORKS_NAME_RUNNED
     _WORKS_NAME_RUNNED.remove(id)
+
+
+def _notify_work_end(id: str):
+
+    url = get_var(Vars.JAIME_URL) + f'/api/v1/works/{id}/finish'
+    requests.patch(url, timeout=5, verify=False)
