@@ -1,0 +1,11 @@
+env/
+.github/
+img/
+.vscode/
+dist/
+
+*.md
+makefile
+.gitignore
+Dockerfile
+
