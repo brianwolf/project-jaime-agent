@@ -7,15 +7,21 @@ from logic.apps.admin.config.variables import Vars, get_var
 from logic.libs.logger.logger import logger
 
 _THREAD_CONNECTION_JAIME_ACTIVE = True
+_TIME_BETWEEN_REQUESTS_SECONDS = 5
 
 
 def connect_with_jaime():
+
+    global _THREAD_CONNECTION_JAIME_ACTIVE
+    _THREAD_CONNECTION_JAIME_ACTIVE = True
 
     thread = Thread(target=_thread_func)
     thread.start()
 
 
 def _thread_func():
+
+    time.sleep(_TIME_BETWEEN_REQUESTS_SECONDS)
 
     connect_with_jaime = False
 
@@ -27,7 +33,8 @@ def _thread_func():
                 requests.get(url, timeout=5, verify=False)
 
             except Exception:
-                logger().error(f'Se perdio la coneccion con Jaime -> reintentando en 5 seg')
+                logger().error(
+                    f'Se perdio la coneccion con Jaime -> reintentando en {_TIME_BETWEEN_REQUESTS_SECONDS} seg')
                 connect_with_jaime = False
 
         else:
@@ -50,4 +57,9 @@ def _thread_func():
             except Exception:
                 logger().error(f'Error en coneccion con Jaime -> reintentando en 5 seg')
 
-        time.sleep(5)
+        time.sleep(_TIME_BETWEEN_REQUESTS_SECONDS)
+
+
+def disconnect_with_jaime():
+    global _THREAD_CONNECTION_JAIME_ACTIVE
+    _THREAD_CONNECTION_JAIME_ACTIVE = False

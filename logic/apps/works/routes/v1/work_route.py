@@ -1,6 +1,7 @@
 import yaml
 from flask import Blueprint, jsonify, request
 from logic.apps.works.services import work_service
+from logic.apps.filesystem.services import workingdir_service
 
 blue_print = Blueprint('works', __name__, url_prefix='/api/v1/works')
 
@@ -25,3 +26,12 @@ def logs(id: str):
     result = work_service.get_logs(id)
 
     return result, 200
+
+
+@blue_print.route('/<id>', methods=['DELETE'])
+def delete(id: str):
+
+    work_service.delete(id)
+    workingdir_service.delete(id)
+
+    return '', 200
