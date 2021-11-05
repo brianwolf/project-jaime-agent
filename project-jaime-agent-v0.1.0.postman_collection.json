@@ -50,11 +50,10 @@
 											]
 										},
 										"url": {
-											"raw": "localhost:7000/api/v1/works/",
+											"raw": "{{project-jaime-agent}}/api/v1/works/",
 											"host": [
-												"localhost"
+												"{{project-jaime-agent}}"
 											],
-											"port": "7000",
 											"path": [
 												"api",
 												"v1",
@@ -114,6 +113,33 @@
 												"works",
 												":id",
 												"logs"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "282c2388b49b"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "download zip",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{project-jaime-agent}}/api/v1/works/:id/workspace",
+											"host": [
+												"{{project-jaime-agent}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"works",
+												":id",
+												"workspace"
 											],
 											"variable": [
 												{

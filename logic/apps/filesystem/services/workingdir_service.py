@@ -1,8 +1,11 @@
 import shutil
+import zipfile
 from os import walk
 from pathlib import Path
 from typing import Any, List
 from uuid import UUID, uuid4
+
+from logic.apps.zip.service import zip_service
 
 _TEMP_PATH = '/tmp'
 
@@ -31,3 +34,13 @@ def get(id: Any) -> List[str]:
         result.extend(dirpath)
 
     return result
+
+
+def download_zip(id: str) -> str:
+
+    zip_result_path = _TEMP_PATH + f'/{id}.zip'
+    path = fullpath(id)
+
+    zip_service.create(zip_result_path, path)
+
+    return zip_result_path
