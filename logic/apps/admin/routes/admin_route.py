@@ -5,6 +5,7 @@ from io import BytesIO
 from flask import Blueprint, jsonify, send_file
 from logic.apps.admin.config.variables import Vars
 from logic.libs.variables.variables import all_vars, get_var
+from logic.apps.admin.config import app
 
 blue_print = Blueprint('admin', __name__, url_prefix='/')
 
@@ -33,3 +34,8 @@ def get_postman():
                      mimetype='application/octet-stream',
                      as_attachment=True,
                      attachment_filename=ntpath.basename(collection_dir))
+
+
+@blue_print.route('/alive')
+def alive_jaime():
+    return jsonify(id=app.get_id_agent())

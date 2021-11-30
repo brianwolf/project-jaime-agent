@@ -1,19 +1,23 @@
 #!env/bin/python
 from flask.app import Flask
 
+from logic.apps.admin.config.app import setup_id_agent
 from logic.apps.admin.config.logger import setup_loggers
 from logic.apps.admin.config.rest import setup_rest
 from logic.apps.admin.config.variables import Vars, setup_vars
 from logic.apps.jaime.services.jaime_service import connect_with_jaime
 from logic.apps.works.services.work_garbage_collector import \
     start_garbage_thread
-from logic.libs.variables.variables import get_var
 from logic.libs.logger.logger import logger
-
-app = Flask(__name__)
+from logic.libs.variables.variables import get_var
 
 setup_vars()
 setup_loggers()
+
+id_agent = setup_id_agent()
+logger().info(f'Agent ID -> {id_agent}')
+
+app = Flask(__name__)
 setup_rest(app)
 
 connect_with_jaime()
