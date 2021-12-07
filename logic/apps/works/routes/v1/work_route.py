@@ -1,7 +1,9 @@
-import yaml
-from flask import Blueprint, jsonify, request
-from logic.apps.works.services import work_service
+import ntpath
+from io import BytesIO
+
+from flask import Blueprint, jsonify, request, send_file
 from logic.apps.filesystem.services import workingdir_service
+from logic.apps.works.services import work_service
 
 blue_print = Blueprint('works', __name__, url_prefix='/api/v1/works')
 
@@ -35,3 +37,15 @@ def delete(id: str):
     workingdir_service.delete(id)
 
     return '', 200
+
+
+@blue_print.route('/<id>/workspace', methods=['GET'])
+def download_workspace(id: str):
+
+    zip_name = f'{id}.zip'
+    zip_path = workingdir_service.download_zip(id)
+
+    return send_file(BytesIO(open(zip_path, 'rb').read()),
+                     mimetype='application/octet-stream',
+                     as_attachment=True,
+                     attachment_filename=ntpath.basename(zip_name))
