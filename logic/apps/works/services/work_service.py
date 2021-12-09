@@ -1,4 +1,5 @@
 
+import os
 import subprocess
 from typing import Any, Dict, List
 
@@ -6,9 +7,12 @@ import requests
 from logic.apps.admin.config.variables import Vars, get_var
 from logic.apps.filesystem.services import workingdir_service
 from logic.libs.logger.logger import logger
+import shutil
 
 _NAME_FILE_TO_EXECUTE = 'module.py'
 _NAME_FILE_LOGS = 'logs.log'
+
+_FOLDER_MODULES = 'repo_modules_default'
 
 _WORKS_NAME_RUNNED = []
 
@@ -20,10 +24,14 @@ def start(id: str, files_bytes_dict: Dict[str, bytes]):
 
     base_path = workingdir_service.fullpath(id)
 
+    for file_name in os.listdir(_FOLDER_MODULES):
+
+        logger().info(f'Generando archivo -> {file_name}')
+        shutil.copy(f'{_FOLDER_MODULES}/{file_name}', base_path)
+
     for file_name, file_bytes in files_bytes_dict.items():
 
         logger().info(f'Generando archivo -> {file_name}')
-
         with open(f'{base_path}/{file_name}', 'w') as f:
             f.write(file_bytes.decode())
 
