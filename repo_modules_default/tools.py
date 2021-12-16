@@ -25,10 +25,10 @@ class Client():
         short_version = self.version.split(".")[0]
 
         if short_version == "3":
-            sh(f"{self.binary_name()} login {self.url} --token={self.token} --insecure-skip-tls-verify", echo=False)
+            sh(f"{self.binary_name()} login {self.url} --token={self.token} --insecure-skip-tls-verify")
             return
 
-        sh(f"{self.binary_name()} login --server={self.url} --token={self.token} --insecure-skip-tls-verify", echo=False)
+        sh(f"{self.binary_name()} login --server={self.url} --token={self.token} --insecure-skip-tls-verify")
 
     def exec(self, cmd: str, echo: bool = True) -> str:
         final_cmd = f"{self.binary_name()} {cmd}"
