@@ -14,3 +14,10 @@ def delete():
     jaime_service.connect_with_jaime()
 
     return '', 200
+
+
+@blue_print.route('/servers/test', methods=['POST'])
+def server_test():
+
+    s = request.json
+    return jsonify(jaime_service.test_server(s['url'], s['token'])), 200

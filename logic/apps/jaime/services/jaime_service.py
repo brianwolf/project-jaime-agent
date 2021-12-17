@@ -1,6 +1,7 @@
 import subprocess
 import time
 from threading import Thread
+from typing import Dict
 
 import requests
 from logic.apps.admin.config.variables import Vars, get_var
@@ -66,3 +67,13 @@ def _thread_func():
 def disconnect_with_jaime():
     global _THREAD_CONNECTION_JAIME_ACTIVE
     _THREAD_CONNECTION_JAIME_ACTIVE = False
+
+
+def test_server(url, token) -> Dict[str, str]:
+    text = subprocess.getoutput(
+        f"oc login --server={url} --token={token} --insecure-skip-tls-verify")
+
+    return {
+        'success': 'Login successful' in text,
+        'text': text
+    }
