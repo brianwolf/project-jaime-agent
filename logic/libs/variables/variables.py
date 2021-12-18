@@ -26,16 +26,15 @@ class Config:
     enum_vars: Enum
 
 
-def setup(configs: List[Config]):
+def setup(cfg: Config):
     """
     Configura la util, se debe usar antes de usar cualquier otro metodo
 
     - configs -> lista de objetos de configuracion
     """
-    for cfg in configs:
-        config.DICT_VARS.update(make_vars_dict(cfg.file_path))
-        config.HIDEN_VARS.extend(cfg.hiden_vars)
-        config.ENUMS_LIST.extend(cfg.enum_vars)
+    config.DICT_VARS.update(make_vars_dict(cfg.file_path))
+    config.HIDEN_VARS.extend(cfg.hiden_vars)
+    config.ENUMS_LIST.extend(cfg.enum_vars)
 
 
 def get_var(var: Enum) -> str:
