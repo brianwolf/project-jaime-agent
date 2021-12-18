@@ -15,9 +15,8 @@ class Vars(Enum):
 
 
 def setup_vars():
-    setup([
-        Config(
-            file_path='variables.env',
-            hiden_vars=[],
-            enum_vars=Vars)
-    ])
+    setup(Config(
+        file_path='variables.yaml',
+        hiden_vars=[],
+        enum_vars=Vars)
+    )
