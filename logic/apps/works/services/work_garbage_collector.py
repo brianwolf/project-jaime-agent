@@ -18,7 +18,7 @@ def garbabge_collector():
 
         m_date = datetime.fromtimestamp(os.path.getmtime(path))
 
-        if m_date + timedelta(hours=24) < datetime.now():
+        if m_date + timedelta(hours=48) < datetime.now():
             work_service.delete(id)
             workingdir_service.delete(id)
             logger().info(f'Deleted workingdir -> {id}')

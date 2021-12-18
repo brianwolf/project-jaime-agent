@@ -6,7 +6,7 @@ install i:
 	. env/bin/deactivate
 
 build b:
-	docker build . -t brianwolf94/project-jaime-agent:local --no-cache
+	docker build . -t brianwolf94/jaime-agent:0.7.0 --no-cache
 
 compile c:
 	python -m compile -b -f -o dist/ .
