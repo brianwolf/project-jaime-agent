@@ -41,9 +41,10 @@ def _thread_func():
 
         else:
             try:
+                run_on_docker = get_var(Vars.RUN_ON_DOCKER).lower() == 'true'
                 url = get_var(Vars.JAIME_URL) + '/api/v1/agents/'
-                host = subprocess.getoutput("awk 'END{print $1}' /etc/hosts") if get_var(
-                    Vars.RUN_ON_DOCKER) else get_var(Vars.PYTHON_HOST)
+                host = subprocess.getoutput(
+                    "awk 'END{print $1}' /etc/hosts") if run_on_docker else get_var(Vars.PYTHON_HOST)
 
                 payload = {
                     'host': host,
@@ -51,6 +52,7 @@ def _thread_func():
                     'type': get_var(Vars.AGENT_TYPE).upper(),
                     'id': app.get_id_agent()
                 }
+
                 requests.post(url, json=payload, timeout=5, verify=False)
                 connected_with_jaime = True
 
