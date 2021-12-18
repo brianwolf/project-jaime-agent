@@ -30,7 +30,7 @@ RUN rm -fr resources
 CMD gunicorn \
     -b ${PYTHON_HOST}:${PYTHON_PORT} \
     --workers=1 \
-    --worker-connections=1000 \
+    --threads=2 \
     app:app
 
 COPY requirements.txt ./

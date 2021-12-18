@@ -12,16 +12,21 @@ _THREAD_GARBAGE_ACTIVE = True
 
 def garbabge_collector():
 
-    for id in work_service.list_all_running():
+    try:
 
-        path = workingdir_service.fullpath(id)
+        for id in work_service.list_all_running():
 
-        m_date = datetime.fromtimestamp(os.path.getmtime(path))
+            path = workingdir_service.fullpath(id)
 
-        if m_date + timedelta(hours=48) < datetime.now():
-            work_service.delete(id)
-            workingdir_service.delete(id)
-            logger().info(f'Deleted workingdir -> {id}')
+            m_date = datetime.fromtimestamp(os.path.getmtime(path))
+
+            if m_date + timedelta(hours=48) < datetime.now():
+                work_service.delete(id)
+                workingdir_service.delete(id)
+                logger().info(f'Deleted workingdir -> {id}')
+
+    except Exception as e:
+        logger().error(str(e))
 
 
 def start_garbage_thread():
