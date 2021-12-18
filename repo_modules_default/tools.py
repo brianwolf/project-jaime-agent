@@ -21,14 +21,20 @@ class Client():
         self.token = token
         self.version = version
 
-    def login(self) -> str:
+    def login(self) -> bool:
         short_version = self.version.split(".")[0]
 
-        if short_version == "3":
-            sh(f"{self.binary_name()} login {self.url} --token={self.token} --insecure-skip-tls-verify")
-            return
+        result = ""
 
-        sh(f"{self.binary_name()} login --server={self.url} --token={self.token} --insecure-skip-tls-verify")
+        if short_version == "3":
+            result = sh(
+                f"{self.binary_name()} login {self.url} --token={self.token} --insecure-skip-tls-verify")
+
+        if short_version == "4":
+            result = sh(
+                f"{self.binary_name()} login --server={self.url} --token={self.token} --insecure-skip-tls-verify")
+
+        return 'Logged into' in result
 
     def exec(self, cmd: str, echo: bool = True) -> str:
         final_cmd = f"{self.binary_name()} {cmd}"
