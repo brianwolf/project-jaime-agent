@@ -74,6 +74,6 @@ def test_server(url, token) -> Dict[str, str]:
         f"oc login --server={url} --token={token} --insecure-skip-tls-verify")
 
     return {
-        'success': 'Login successful' in text,
+        'success': 'Logged into' in text,
         'text': text
     }
