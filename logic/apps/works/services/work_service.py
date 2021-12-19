@@ -1,20 +1,21 @@
 
 import os
+import shutil
 import subprocess
+from multiprocessing import Process
 from typing import Any, Dict, List
 
 import requests
 from logic.apps.admin.config.variables import Vars, get_var
 from logic.apps.filesystem.services import workingdir_service
 from logic.libs.logger.logger import logger
-import shutil
 
 _NAME_FILE_TO_EXECUTE = 'module.py'
 _NAME_FILE_LOGS = 'logs.log'
 
 _FOLDER_MODULES = 'repo_modules_default'
 
-_WORKS_NAME_RUNNED = []
+_WORKS_RUNING: Dict[str, Process] = {}
 
 
 def start(id: str, files_bytes_dict: Dict[str, bytes]):
@@ -35,8 +36,10 @@ def start(id: str, files_bytes_dict: Dict[str, bytes]):
         with open(f'{base_path}/{file_name}', 'w') as f:
             f.write(file_bytes.decode())
 
-    _exec(id)
-    _WORKS_NAME_RUNNED.append(id)
+    process = Process(target=_exec, args=(id,))
+    process.start()
+
+    _WORKS_RUNING[id] = process
 
 
 def _exec(id: str):
@@ -59,12 +62,14 @@ def get_logs(id: str) -> str:
 
 
 def list_all_running() -> List[str]:
-    return _WORKS_NAME_RUNNED
+    return _WORKS_RUNING.keys()
 
 
 def delete(id: str):
-    global _WORKS_NAME_RUNNED
-    _WORKS_NAME_RUNNED.remove(id)
+    global _WORKS_RUNING
+
+    _WORKS_RUNING[id].kill()
+    _WORKS_RUNING.pop(id)
 
 
 def _notify_work_end(id: str):
