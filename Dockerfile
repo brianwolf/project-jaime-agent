@@ -40,6 +40,6 @@ RUN rm -fr requirements.txt
 
 COPY --from=compiler /home/src/dist/ ./
 COPY *.json ./
-COPY variables.env ./
+COPY variables.yaml ./
 
 COPY repo_modules_default/ repo_modules_default/
