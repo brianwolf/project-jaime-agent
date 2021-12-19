@@ -37,7 +37,7 @@ def start(id: str, files_bytes_dict: Dict[str, bytes]):
             f.write(file_bytes.decode())
 
     process = Process(target=_exec, args=(id,))
-    process.run()
+    process.start()
 
     _WORKS_RUNING[id] = process
 
