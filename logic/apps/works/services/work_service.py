@@ -36,10 +36,6 @@ def start(id: str, files_bytes_dict: Dict[str, bytes]):
 
         file_content = file_bytes.decode()
 
-        if file_name == _NAME_FILE_TO_EXECUTE:
-            file_content = f"""import sys\nsys.stdout = open('{_NAME_FILE_LOGS}', 'w')\n""" + \
-                file_content
-
         with open(f'{base_path}/{file_name}', 'w') as f:
             f.write(file_content)
 
@@ -55,7 +51,8 @@ def _exec(id: str):
 
     cmd = f'cd {base_path} && python3 {_NAME_FILE_TO_EXECUTE} > {_NAME_FILE_LOGS}'
 
-    process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+    process = subprocess.Popen(
+        cmd, shell=True, stdout=open(f'{_NAME_FILE_LOGS}', 'w'))
     process.wait()
 
     _notify_work_end(id)
