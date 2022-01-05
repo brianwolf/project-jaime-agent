@@ -33,8 +33,15 @@ def start(id: str, files_bytes_dict: Dict[str, bytes]):
     for file_name, file_bytes in files_bytes_dict.items():
 
         logger().info(f'Generando archivo -> {file_name}')
+
+        file_content = file_bytes.decode()
+
+        if file_name == _NAME_FILE_TO_EXECUTE:
+            file_content = f"""import sys\nsys.stdout = open('{_NAME_FILE_LOGS}', 'w')\n""" + \
+                file_content
+
         with open(f'{base_path}/{file_name}', 'w') as f:
-            f.write(file_bytes.decode())
+            f.write(file_content)
 
     process = Process(target=_exec, args=(id,))
     process.start()
@@ -46,7 +53,7 @@ def _exec(id: str):
 
     base_path = workingdir_service.fullpath(id)
 
-    cmd = f'cd {base_path} && > {_NAME_FILE_LOGS} && python3 {_NAME_FILE_TO_EXECUTE} >> {_NAME_FILE_LOGS}'
+    cmd = f'cd {base_path} && python3 {_NAME_FILE_TO_EXECUTE} > {_NAME_FILE_LOGS}'
 
     process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
     process.wait()
