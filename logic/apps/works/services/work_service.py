@@ -47,7 +47,7 @@ def _exec(id: str):
 
     base_path = workingdir_service.fullpath(id)
 
-    cmd = f'cd {base_path} && python3 {_NAME_FILE_RUNNER} > {_NAME_FILE_LOGS}'
+    cmd = f'cd {base_path} && > {_NAME_FILE_LOGS} && python3 {_NAME_FILE_RUNNER}'
 
     process = subprocess.Popen(cmd, shell=True)
     process.wait()
