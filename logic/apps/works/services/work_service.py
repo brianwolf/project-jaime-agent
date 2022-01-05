@@ -11,6 +11,7 @@ from logic.apps.filesystem.services import workingdir_service
 from logic.libs.logger.logger import logger
 
 _NAME_FILE_TO_EXECUTE = 'module.py'
+_NAME_FILE_RUNNER = 'runner.py'
 _NAME_FILE_LOGS = 'logs.log'
 
 _FOLDER_MODULES = 'repo_modules_default'
@@ -33,11 +34,8 @@ def start(id: str, files_bytes_dict: Dict[str, bytes]):
     for file_name, file_bytes in files_bytes_dict.items():
 
         logger().info(f'Generando archivo -> {file_name}')
-
-        file_content = file_bytes.decode()
-
         with open(f'{base_path}/{file_name}', 'w') as f:
-            f.write(file_content)
+            f.write(file_bytes.decode())
 
     process = Process(target=_exec, args=(id,))
     process.start()
@@ -49,10 +47,9 @@ def _exec(id: str):
 
     base_path = workingdir_service.fullpath(id)
 
-    cmd = f'cd {base_path} && python3 {_NAME_FILE_TO_EXECUTE} > {_NAME_FILE_LOGS}'
+    cmd = f'cd {base_path} && python3 {_NAME_FILE_RUNNER} > {_NAME_FILE_LOGS}'
 
-    process = subprocess.Popen(
-        cmd, shell=True, stdout=open(f'{_NAME_FILE_LOGS}', 'w'))
+    process = subprocess.Popen(cmd, shell=True)
     process.wait()
 
     _notify_work_end(id)
