@@ -10,7 +10,6 @@ from logic.apps.admin.config.variables import Vars, get_var
 from logic.apps.filesystem.services import workingdir_service
 from logic.libs.logger.logger import logger
 
-_NAME_FILE_TO_EXECUTE = 'module.py'
 _NAME_FILE_RUNNER = 'runner.py'
 _NAME_FILE_LOGS = 'logs.log'
 
@@ -40,6 +39,7 @@ def start(id: str, files_bytes_dict: Dict[str, bytes]):
     process = Process(target=_exec, args=(id,))
     process.start()
 
+    global _WORKS_RUNING
     _WORKS_RUNING[id] = process
 
 
@@ -55,13 +55,6 @@ def _exec(id: str):
     _notify_work_end(id)
 
 
-def get_logs(id: str) -> str:
-
-    path = workingdir_service.fullpath(id) + f'/{_NAME_FILE_LOGS}'
-    with open(path, 'r') as f:
-        return f.read()
-
-
 def list_all_running() -> List[str]:
     return _WORKS_RUNING.keys()
 
@@ -74,6 +67,7 @@ def delete(id: str):
 
 
 def _notify_work_end(id: str):
+    global _WORKS_RUNING
 
     url = get_var(Vars.JAIME_URL) + f'/api/v1/works/{id}/finish'
     requests.patch(url, timeout=5, verify=False)
