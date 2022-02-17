@@ -12,12 +12,11 @@ from logic.libs.variables.variables import get_var
 setup_vars()
 setup_loggers()
 
-id_agent = setup_id_agent()
-logger().info(f'Agent ID -> {id_agent}')
-
 app = Flask(__name__)
 setup_rest(app)
 
+id_agent = setup_id_agent()
+logger().info(f'Agent ID -> {id_agent}')
 connect_with_jaime()
 
 logger().info("""
