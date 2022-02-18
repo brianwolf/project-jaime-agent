@@ -8,6 +8,7 @@ from typing import Any, Dict, List
 import requests
 from logic.apps.admin.config.variables import Vars, get_var
 from logic.apps.filesystem.services import workingdir_service
+from logic.apps.works.models.work_model import StatusFinished
 from logic.libs.logger.logger import logger
 
 _NAME_FILE_RUNNER = 'runner.py'
@@ -52,7 +53,11 @@ def _exec(id: str):
     process = subprocess.Popen(cmd, shell=True)
     process.wait()
 
-    _notify_work_end(id)
+    status = StatusFinished.SUCCESS
+    if process.returncode != 0:
+        status = StatusFinished.ERROR
+
+    _notify_work_end(id, status)
 
 
 def list_all_running() -> List[str]:
@@ -66,8 +71,9 @@ def delete(id: str):
     _WORKS_RUNING.pop(id)
 
 
-def _notify_work_end(id: str):
-    global _WORKS_RUNING
+def _notify_work_end(id: str, status: StatusFinished):
 
     url = get_var(Vars.JAIME_URL) + f'/api/v1/works/{id}/finish'
-    requests.patch(url, timeout=5, verify=False)
+    body = {"status": status.value}
+
+    requests.patch(url, json=body, timeout=5, verify=False)
