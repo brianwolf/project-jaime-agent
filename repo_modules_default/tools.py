@@ -1,5 +1,4 @@
 import subprocess
-import sys
 from dataclasses import dataclass
 from subprocess import PIPE
 from typing import Dict
@@ -15,11 +14,6 @@ class Client():
     url: str
     token: str
     version: str
-
-    def __init__(self, url: str, token: str, version: str) -> "Client":
-        self.url = url
-        self.token = token
-        self.version = version
 
     def login(self) -> bool:
         short_version = self.version.split(".")[0]

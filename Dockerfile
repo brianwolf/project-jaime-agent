@@ -24,6 +24,7 @@ ENV PYTHON_HOST=0.0.0.0
 ENV PYTHON_PORT=80
 ENV TZ America/Argentina/Buenos_Aires
 ENV RUN_ON_DOCKER=true
+ENV TMP_PATH=/data/workingdir
 
 ADD resources/oc.tar.gz /usr/local/bin/
 RUN rm -fr resources
