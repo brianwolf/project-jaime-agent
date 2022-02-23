@@ -22,9 +22,11 @@ ARG ARG_VERSION=local
 ENV VERSION=${ARG_VERSION}
 ENV PYTHON_HOST=0.0.0.0
 ENV PYTHON_PORT=80
-ENV TZ America/Argentina/Buenos_Aires
+ENV AGENT_TYPE=OPENSHIFT
 ENV RUN_ON_DOCKER=true
-ENV TMP_PATH=/data/workingdir
+ENV WORKINGDIR_PATH=/data/workingdir
+
+ENV TZ America/Argentina/Buenos_Aires
 
 ADD resources/oc.tar.gz /usr/local/bin/
 RUN rm -fr resources
