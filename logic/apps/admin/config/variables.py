@@ -12,7 +12,7 @@ class Vars(Enum):
     AGENT_TYPE = 'AGENT_TYPE'
     JAIME_URL = 'JAIME_URL'
     RUN_ON_DOCKER = 'RUN_ON_DOCKER'
-    TMP_PATH = 'TMP_PATH'
+    WORKINGDIR_PATH = 'WORKINGDIR_PATH'
 
 
 def setup_vars():
