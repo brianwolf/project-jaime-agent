@@ -31,6 +31,9 @@ ENV TZ America/Argentina/Buenos_Aires
 ADD resources/oc.tar.gz /usr/local/bin/
 RUN rm -fr resources
 
+RUN apt-get update
+RUN apt-get install iputils-ping curl git -y
+
 CMD gunicorn \
     -b ${PYTHON_HOST}:${PYTHON_PORT} \
     --workers=1 \
