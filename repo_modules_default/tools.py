@@ -1,7 +1,6 @@
 import subprocess
 from dataclasses import dataclass
-from subprocess import PIPE
-from typing import Dict
+from typing import Dict, List
 
 import yaml
 
@@ -15,43 +14,8 @@ class Client():
     token: str
     version: str
 
-    def login(self) -> bool:
-        short_version = self.version.split(".")[0]
 
-        result = ""
-
-        if short_version == "3":
-            result = sh(
-                f"{self.binary_name()} login {self.url} --token={self.token} --insecure-skip-tls-verify")
-
-        if short_version == "4":
-            result = sh(
-                f"{self.binary_name()} login --server={self.url} --token={self.token} --insecure-skip-tls-verify")
-
-        return 'Logged into' in result
-
-    def exec(self, cmd: str, echo: bool = True) -> str:
-        final_cmd = f"{self.binary_name()} {cmd}"
-        return sh(final_cmd, echo)
-
-    def binary_name(self) -> str:
-        return "oc"
-
-
-def sh(cmd: str, echo: bool = True) -> str:
-
-    if echo:
-        print(cmd)
-
-    result = subprocess.getoutput(cmd)
-
-    if echo and result:
-        print(result)
-
-    return result if result else ""
-
-
-def get_client(server_name: str) -> "Client":
+def _get_client(server_name: str) -> "Client":
 
     with open(_SERVER_FILE_NAME, 'r') as f:
         servers_dict = yaml.load(f.read(), Loader=yaml.FullLoader)
@@ -69,6 +33,37 @@ def get_client(server_name: str) -> "Client":
         raise Exception(f'No existe el server de nombre {server_name}')
 
 
+def sh(cmd: str, echo: bool = True) -> str:
+
+    if echo:
+        print(cmd)
+
+    result = subprocess.getoutput(cmd)
+
+    if echo and result:
+        print(result)
+
+    return result if result else ""
+
+
+def get_servers_name() -> List[str]:
+
+    with open(_SERVER_FILE_NAME, 'r') as f:
+        servers_dict = yaml.load(f.read(), Loader=yaml.FullLoader)
+
+    return servers_dict.keys()
+
+
 def get_params() -> Dict[str, object]:
+
     with open(_PARAMS_FILE_NAME, 'r') as f:
         return yaml.load(f.read(), Loader=yaml.FullLoader)
+
+
+def login_openshift(server_name) -> bool:
+
+    client = _get_client(server_name)
+    result = sh(
+        f"oc login --server={client.url} --token={client.token} --insecure-skip-tls-verify")
+
+    return 'Logged into' in result
