@@ -72,11 +72,18 @@ def disconnect_with_jaime():
     _THREAD_CONNECTION_JAIME_ACTIVE = False
 
 
-def test_server(url, token) -> Dict[str, str]:
-    text = subprocess.getoutput(
-        f"oc login --server={url} --token={token} --insecure-skip-tls-verify")
+def test_cluster(url, token, type) -> Dict[str, str]:
+
+    if type == 'OPENSHIFT':
+        text = subprocess.getoutput(
+            f"oc login --server={url} --token={token} --insecure-skip-tls-verify")
+
+        return {
+            'success': 'Logged into' in text,
+            'text': text
+        }
 
     return {
-        'success': 'Logged into' in text,
-        'text': text
+        'success': False,
+        'text': 'Tipo de cluster no encontrado'
     }
