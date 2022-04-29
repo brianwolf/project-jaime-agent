@@ -14,7 +14,7 @@ from logic.libs.logger.logger import logger
 _NAME_FILE_RUNNER = 'runner.py'
 _NAME_FILE_LOGS = 'logs.log'
 
-_FOLDER_MODULES = 'repo_modules_default'
+_FOLDER_MODULES = 'logic/apps/repo_modules_default'
 
 _WORKS_RUNING: Dict[str, Process] = {}
 

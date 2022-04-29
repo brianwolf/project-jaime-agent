@@ -17,7 +17,7 @@ class Vars(Enum):
 
 def setup_vars():
     setup(Config(
-        file_path='variables.yaml',
+        file_path='logic/resources/variables.yaml',
         hiden_vars=[],
         enum_vars=Vars)
     )
