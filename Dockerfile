@@ -21,7 +21,7 @@ ARG ARG_VERSION=local
 
 ENV VERSION=${ARG_VERSION}
 ENV PYTHON_HOST=0.0.0.0
-ENV PYTHON_PORT=80
+ENV PYTHON_PORT=7001
 ENV AGENT_TYPE=OPENSHIFT
 ENV RUN_ON_DOCKER=true
 ENV WORKINGDIR_PATH=/data/workingdir
@@ -45,3 +45,4 @@ RUN pip install -r requirements.txt --upgrade pip
 RUN rm -fr requirements.txt
 
 COPY --from=compiler /home/src/dist/ ./
+COPY logic/resources logic/resources
