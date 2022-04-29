@@ -75,7 +75,7 @@ def _get_server_client(server_name: str) -> "ServerClient":
 # PUBLIC
 # ==========================================================
 
-def ssh(cmd: str, server_name: str, echo: bool = True) -> str:
+def ssh(server_name: str, cmd: str, echo: bool = True) -> str:
 
     if echo:
         print(cmd)
@@ -90,13 +90,10 @@ def ssh(cmd: str, server_name: str, echo: bool = True) -> str:
         password=server.password,
         port=int(server.port)
     )
-    _, ssh_stdout, ssh_stderr = ssh.exec_command(cmd)
+    _, ssh_stdout, _ = ssh.exec_command(cmd)
 
     if echo and ssh_stdout:
         print(ssh_stdout.read().decode())
-
-    if echo and ssh_stderr:
-        print(ssh_stderr.read().decode())
 
     return ssh_stdout.read().decode() if ssh_stdout else ""
 
@@ -145,7 +142,9 @@ def login_openshift(cluster_name) -> bool:
     return 'Logged into' in result
 
 
-def new_jaime_work(repo_name: str, module_name: str, agent_type: str, params: Dict[str, object]) -> str:
+def new_jaime_work(name: str, repo_name: str, module_name: str, agent_type: str, params: Dict[str, object]) -> str:
+
+    params['name'] = name
 
     params['module'] = {
         'repo': repo_name,
