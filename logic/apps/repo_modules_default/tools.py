@@ -15,7 +15,7 @@ import yaml
 
 
 _SERVER_FILE_NAME = 'servers.yaml'
-_CLUSTER_FILE_NAME = 'cluster.yaml'
+_CLUSTER_FILE_NAME = 'clusters.yaml'
 _PARAMS_FILE_NAME = 'params.yaml'
 
 
