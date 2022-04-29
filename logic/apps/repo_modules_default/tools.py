@@ -83,8 +83,13 @@ def ssh(cmd: str, server_name: str, echo: bool = True) -> str:
     server = _get_server_client(server_name)
 
     ssh = paramiko.SSHClient()
-    ssh.connect(hostname=server.host, username=server.user,
-                password=server.password, port=server.port)
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(
+        hostname=server.host,
+        username=server.user,
+        password=server.password,
+        port=int(server.port)
+    )
     _, ssh_stdout, ssh_stderr = ssh.exec_command(cmd)
 
     if echo and ssh_stdout:
@@ -153,7 +158,7 @@ def new_jaime_work(repo_name: str, module_name: str, agent_type: str, params: Di
 
     yaml_str = str(yaml.dump(params))
 
-    JAIME_URL = os.getenv('JAIME_URL') + '/'
+    JAIME_URL = os.getenv('JAIME_URL')
 
     requests.post(
         url=f'{JAIME_URL}/api/v1/works',
