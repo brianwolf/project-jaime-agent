@@ -16,8 +16,8 @@ def delete():
     return '', 200
 
 
-@blue_print.route('/servers/test', methods=['POST'])
-def server_test():
+@blue_print.route('/clusters/test', methods=['POST'])
+def cluster_test():
 
     s = request.json
-    return jsonify(jaime_service.test_server(s['url'], s['token'])), 200
+    return jsonify(jaime_service.test_cluster(s['url'], s['token'], s['type'])), 200
