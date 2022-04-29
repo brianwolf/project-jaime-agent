@@ -93,12 +93,12 @@ def ssh(cmd: str, server_name: str, echo: bool = True) -> str:
     _, ssh_stdout, ssh_stderr = ssh.exec_command(cmd)
 
     if echo and ssh_stdout:
-        print(ssh_stdout)
+        print(ssh_stdout.read().decode())
 
     if echo and ssh_stderr:
-        print(ssh_stderr)
+        print(ssh_stderr.read().decode())
 
-    return ssh_stdout if ssh_stdout else ""
+    return ssh_stdout.read().decode() if ssh_stdout else ""
 
 
 def sh(cmd: str, echo: bool = True) -> str:
@@ -145,23 +145,23 @@ def login_openshift(cluster_name) -> bool:
     return 'Logged into' in result
 
 
-def new_jaime_work(repo_name: str, module_name: str, agent_type: str, params: Dict[str, object]):
+def new_jaime_work(repo_name: str, module_name: str, agent_type: str, params: Dict[str, object]) -> str:
 
     params['module'] = {
-        'repository': repo_name,
+        'repo': repo_name,
         'name': module_name
     }
 
     params['agent'] = {
-        'type': agent_type
+        'type': agent_type.upper()
     }
 
     yaml_str = str(yaml.dump(params))
 
     JAIME_URL = os.getenv('JAIME_URL')
 
-    requests.post(
+    return requests.post(
         url=f'{JAIME_URL}/api/v1/works',
         data=yaml_str,
         headers={'Content-Type': 'text/plain; charset=utf-8'}
-    )
+    ).text
