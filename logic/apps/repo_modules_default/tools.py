@@ -51,7 +51,7 @@ def _get_server_client(server_name: str) -> "ServerClient":
     for s in servers_dict:
 
         if s['name'] == server_name:
-            return ClusterClient(
+            return ServerClient(
                 host=s['host'],
                 port=s['port'],
                 user=s['user'],
@@ -70,7 +70,7 @@ def ssh(cmd: str, server_name: str, echo: bool = True) -> str:
     server = _get_server_client(server_name)
 
     ssh = paramiko.SSHClient()
-    ssh.connect(server.host, username=server.user,
+    ssh.connect(hostname=server.host, username=server.user,
                 password=server.password, port=server.port)
     _, ssh_stdout, ssh_stderr = ssh.exec_command(cmd)
 
