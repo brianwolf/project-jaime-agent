@@ -45,3 +45,4 @@ RUN pip install -r requirements.txt --upgrade pip
 RUN rm -fr requirements.txt
 
 COPY --from=compiler /home/src/dist/ ./
+COPY logic/resources logic/resources
