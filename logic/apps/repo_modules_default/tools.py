@@ -75,7 +75,7 @@ def _get_server_client(server_name: str) -> "ServerClient":
 # PUBLIC
 # ==========================================================
 
-def ssh(cmd: str, server_name: str, echo: bool = True) -> str:
+def ssh(server_name: str, cmd: str, echo: bool = True) -> str:
 
     if echo:
         print(cmd)
