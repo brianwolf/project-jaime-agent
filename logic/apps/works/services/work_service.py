@@ -11,7 +11,7 @@ from logic.apps.filesystem.services import workingdir_service
 from logic.apps.works.models.work_model import StatusFinished
 from logic.libs.logger.logger import logger
 
-_NAME_FILE_RUNNER = 'runner.py'
+_NAME_FILE_RUNNER = 'runner.pyc'
 _NAME_FILE_LOGS = 'logs.log'
 
 _FOLDER_MODULES = 'logic/apps/repo_modules_default'

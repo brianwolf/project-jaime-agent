@@ -15,7 +15,7 @@ import yaml
 
 
 _SERVER_FILE_NAME = 'servers.yaml'
-_CLUSTER_FILE_NAME = 'cluster.yaml'
+_CLUSTER_FILE_NAME = 'clusters.yaml'
 _PARAMS_FILE_NAME = 'params.yaml'
 
 
@@ -138,6 +138,39 @@ def login_openshift(cluster_name) -> bool:
         f"oc login --server={client.url} --token={client.token} --insecure-skip-tls-verify")
 
     return 'Logged into' in result
+
+
+def login_kubernetes(cluster_name) -> bool:
+
+    client = _get_cluster_client(cluster_name)
+
+    sh('mkdir -p /root/.kube', echo=False)
+
+    with open('/root/.kube/config', 'w') as file:
+        file.write(f""" 
+apiVersion: v1
+kind: Config
+clusters:
+- cluster:
+    insecure-skip-tls-verify: true
+    server: {client.url}
+  name: jaime
+users:
+- name: jaime
+  user:
+    token: {client.token}
+contexts:
+- context:
+    cluster: jaime
+    namespace: default
+    user: jaime
+  name: jaime
+current-context: jaime
+        """)
+
+    result = sh(f"kubectl config view", echo=False)
+
+    return 'jaime' in result
 
 
 def new_jaime_work(repo_name: str, module_name: str, agent_type: str, params: Dict[str, object]):
