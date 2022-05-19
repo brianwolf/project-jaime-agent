@@ -6,7 +6,7 @@ install i:
 	. env/bin/deactivate
 
 build b:
-	docker build . -t brianwolf94/jaime-agent:1.1.0
+	docker build . -t brianwolf94/jaime-agent:1.1.1
 
 compile c:
 	python -m compile -b -f -o dist/ .
