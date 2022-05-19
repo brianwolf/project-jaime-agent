@@ -176,20 +176,20 @@ current-context: jaime
 def new_jaime_work(repo_name: str, module_name: str, agent_type: str, params: Dict[str, object]):
 
     params['module'] = {
-        'repository': repo_name,
+        'repo': repo_name,
         'name': module_name
     }
 
     params['agent'] = {
-        'type': agent_type
+        'type': agent_type.upper()
     }
 
     yaml_str = str(yaml.dump(params))
 
-    JAIME_URL = os.getenv('JAIME_URL') + '/'
+    JAIME_URL = os.getenv('JAIME_URL')
 
-    requests.post(
+    return requests.post(
         url=f'{JAIME_URL}/api/v1/works',
         data=yaml_str,
         headers={'Content-Type': 'text/plain; charset=utf-8'}
-    )
+    ).text
