@@ -83,19 +83,17 @@ def ssh(server_name: str, cmd: str, echo: bool = True) -> str:
     server = _get_server_client(server_name)
 
     ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(
-        hostname=server.host,
-        username=server.user,
-        password=server.password,
-        port=int(server.port)
-    )
-    _, ssh_stdout, _ = ssh.exec_command(cmd)
+    ssh.connect(hostname=server.host, username=server.user,
+                password=server.password, port=server.port)
+    _, ssh_stdout, ssh_stderr = ssh.exec_command(cmd)
 
     if echo and ssh_stdout:
-        print(ssh_stdout.read().decode())
+        print(ssh_stdout)
 
-    return ssh_stdout.read().decode() if ssh_stdout else ""
+    if echo and ssh_stderr:
+        print(ssh_stderr)
+
+    return ssh_stdout if ssh_stdout else ""
 
 
 def sh(cmd: str, echo: bool = True) -> str:
@@ -142,9 +140,40 @@ def login_openshift(cluster_name) -> bool:
     return 'Logged into' in result
 
 
-def new_jaime_work(name: str, repo_name: str, module_name: str, agent_type: str, params: Dict[str, object]) -> str:
+def login_kubernetes(cluster_name) -> bool:
 
-    params['name'] = name
+    client = _get_cluster_client(cluster_name)
+
+    sh('mkdir -p /root/.kube', echo=False)
+
+    with open('/root/.kube/config', 'w') as file:
+        file.write(f""" 
+apiVersion: v1
+kind: Config
+clusters:
+- cluster:
+    insecure-skip-tls-verify: true
+    server: {client.url}
+  name: jaime
+users:
+- name: jaime
+  user:
+    token: {client.token}
+contexts:
+- context:
+    cluster: jaime
+    namespace: default
+    user: jaime
+  name: jaime
+current-context: jaime
+        """)
+
+    result = sh(f"kubectl config view", echo=False)
+
+    return 'jaime' in result
+
+
+def new_jaime_work(repo_name: str, module_name: str, agent_type: str, params: Dict[str, object]):
 
     params['module'] = {
         'repo': repo_name,
