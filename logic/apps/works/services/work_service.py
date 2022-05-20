@@ -67,8 +67,9 @@ def list_all_running() -> List[str]:
 def delete(id: str):
     global _WORKS_RUNING
 
-    _WORKS_RUNING[id].kill()
-    _WORKS_RUNING.pop(id)
+    if id in _WORKS_RUNING:
+        _WORKS_RUNING[id].kill()
+        _WORKS_RUNING.pop(id)
 
 
 def _notify_work_end(id: str, status: StatusFinished):
