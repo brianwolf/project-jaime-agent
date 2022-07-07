@@ -1,3 +1,5 @@
+VERSION=1.3.0
+
 install i:
 	virtualenv -p python3.9 env
 	. env/bin/activate
@@ -6,7 +8,9 @@ install i:
 	. env/bin/deactivate
 
 build b:
-	docker build . -t brianwolf94/jaime-agent:1.2.0
+	docker build . -t brianwolf94/jaime-agent:$(VERSION) -f Dockerfile
+	docker build . -t brianwolf94/jaime-agent-kubernetes:$(VERSION) -f Dockerfile.kubernetes
+	docker build . -t brianwolf94/jaime-agent-openshift:$(VERSION) -f Dockerfile.openshift
 
 compile c:
 	python -m compile -b -f -o dist/ .
