@@ -22,7 +22,7 @@ ARG ARG_VERSION=local
 ENV VERSION=${ARG_VERSION}
 ENV PYTHON_HOST=0.0.0.0
 ENV PYTHON_PORT=7001
-ENV AGENT_TYPE=OPENSHIFT
+ENV AGENT_TYPE=BASE
 ENV RUN_ON_DOCKER=true
 ENV WORKINGDIR_PATH=/data/workingdir
 
@@ -30,10 +30,6 @@ ENV TZ America/Argentina/Buenos_Aires
 
 RUN apt-get update
 RUN apt-get install iputils-ping curl git wget -y
-
-COPY resources/oc-kubectl.tar.gz . 
-RUN tar -xf oc-kubectl.tar.gz -C /usr/local/bin/
-RUN rm oc-kubectl.tar.gz
 
 CMD gunicorn \
     -b ${PYTHON_HOST}:${PYTHON_PORT} \
