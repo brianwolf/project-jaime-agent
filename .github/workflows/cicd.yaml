@@ -63,11 +63,11 @@ jobs:
         push: true
         context: ./
         file: ./Dockerfile.kubernetes
-        tags: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.APP_NAME }}-kubernetes:${{ needs.get-version.outputs.version }},${{ secrets.DOCKER_USERNAME }}/${{ secrets.APP_NAME }}-kubernetes:latest
+        tags: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.APP_NAME }}-kubernetes:${{ needs.build-and-push-base.outputs.version }},${{ secrets.DOCKER_USERNAME }}/${{ secrets.APP_NAME }}-kubernetes:latest
         platforms: linux/amd64
-        build-args: ARG_VERSION=${{ needs.get-version.outputs.version }}
+        build-args: ARG_VERSION=${{ needs.build-and-push-base.outputs.version }}
     outputs:
-      version: ${{ needs.get-version.outputs.version }}
+      version: ${{ needs.build-and-push-base.outputs.version }}
 
 
   build-and-push-openshift:
@@ -88,8 +88,8 @@ jobs:
         push: true
         context: ./
         file: ./Dockerfile.openshift
-        tags: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.APP_NAME }}-openshift:${{ needs.get-version.outputs.version }},${{ secrets.DOCKER_USERNAME }}/${{ secrets.APP_NAME }}-openshift:latest
+        tags: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.APP_NAME }}-openshift:${{ needs.build-and-push-base.outputs.version }},${{ secrets.DOCKER_USERNAME }}/${{ secrets.APP_NAME }}-openshift:latest
         platforms: linux/amd64
-        build-args: ARG_VERSION=${{ needs.get-version.outputs.version }}
+        build-args: ARG_VERSION=${{ needs.build-and-push-base.outputs.version }}
     outputs:
-      version: ${{ needs.get-version.outputs.version }}
+      version: ${{ needs.build-and-push-base.outputs.version }}
