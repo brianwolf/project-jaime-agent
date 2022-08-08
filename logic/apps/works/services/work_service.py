@@ -1,5 +1,8 @@
 
+from importlib.resources import path
+from ntpath import join
 import os
+from pathlib import Path
 import shutil
 import subprocess
 from multiprocessing import Process
@@ -11,7 +14,6 @@ from logic.apps.filesystem.services import workingdir_service
 from logic.apps.works.models.work_model import StatusFinished
 from logic.libs.logger.logger import logger
 
-_NAME_FILE_RUNNER = 'runner.pyc'
 _NAME_FILE_LOGS = 'logs.log'
 
 _FOLDER_MODULES = 'logic/apps/repo_modules_default'
@@ -48,7 +50,10 @@ def _exec(id: str):
 
     base_path = workingdir_service.fullpath(id)
 
-    cmd = f'cd {base_path} && > {_NAME_FILE_LOGS} && python3 {_NAME_FILE_RUNNER}'
+    name_file_runner_final = 'runner.pyc' if os.path.exists(
+        os.path.join(base_path, 'runner.pyc')) else 'runner.py'
+
+    cmd = f'cd {base_path} && > {_NAME_FILE_LOGS} && python3 {name_file_runner_final}'
 
     process = subprocess.Popen(cmd, shell=True)
     process.wait()
