@@ -1,5 +1,8 @@
 
+from importlib.resources import path
+from ntpath import join
 import os
+from pathlib import Path
 import shutil
 import subprocess
 from multiprocessing import Process
@@ -48,7 +51,7 @@ def _exec(id: str):
     base_path = workingdir_service.fullpath(id)
 
     name_file_runner_final = 'runner.pyc' if os.path.exists(
-        'runner.pyc') else 'runner.py'
+        os.path.join(base_path, 'runner.pyc')) else 'runner.py'
 
     cmd = f'cd {base_path} && > {_NAME_FILE_LOGS} && python3 {name_file_runner_final}'
 

@@ -173,7 +173,7 @@ current-context: jaime
     return 'jaime' in result
 
 
-def new_jaime_work(repo_name: str, module_name: str, agent_type: str, params: Dict[str, object] = {}, name: str = str(uuid4())):
+def new_jaime_work(repo_name: str, module_name: str, agent_type: str, params: Dict[str, object] = {}, name: str = str(uuid4())) -> str:
 
     params['name'] = name
 
@@ -194,4 +194,4 @@ def new_jaime_work(repo_name: str, module_name: str, agent_type: str, params: Di
         url=f'{JAIME_URL}/api/v1/works/',
         data=yaml_str,
         headers={'Content-Type': 'text/plain; charset=utf-8'}
-    )
+    ).text
