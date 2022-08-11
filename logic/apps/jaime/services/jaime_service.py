@@ -1,12 +1,13 @@
+import socket
 import subprocess
 import time
 from threading import Thread
 from typing import Dict
 
 import requests
+from logic.apps.admin.config import app
 from logic.apps.admin.config.variables import Vars, get_var
 from logic.libs.logger.logger import logger
-from logic.apps.admin.config import app
 
 _THREAD_CONNECTION_JAIME_ACTIVE = True
 _TIME_BETWEEN_REQUESTS_SECONDS = 5
@@ -42,10 +43,8 @@ def _thread_func():
 
         else:
             try:
-                run_on_docker = str(get_var(Vars.RUN_ON_DOCKER)).lower() == 'true'
                 url = get_var(Vars.JAIME_URL) + '/api/v1/agents/'
-                host = subprocess.getoutput(
-                    "awk 'END{print $1}' /etc/hosts") if run_on_docker else get_var(Vars.PYTHON_HOST)
+                host = socket.gethostname()
 
                 payload = {
                     'host': host,
