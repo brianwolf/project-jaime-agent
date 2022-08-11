@@ -10,3 +10,8 @@ def update_requirements():
     config_service.update_requirements(request.data.decode())
 
     return '', 200
+
+
+@blue_print.route('/logs', methods=['GET'])
+def get_logs():
+    return config_service.get_logs(), 200
