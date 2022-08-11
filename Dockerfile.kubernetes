@@ -1,4 +1,4 @@
-FROM brianwolf94/jaime-agent:1.3.0
+FROM brianwolf94/jaime-agent:1.5.0
 
 ENV AGENT_TYPE=KUBERNETES
 
