@@ -6,5 +6,4 @@ RUN wget https://github.com/prometheus/pushgateway/releases/download/v1.2.0/push
 RUN tar xvfz pushgateway-1.2.0.linux-amd64.tar.gz
 RUN cp pushgateway-1.2.0.linux-amd64/pushgateway /usr/local/bin/
 
-CMD gunicorn -b ${PYTHON_HOST}:${PYTHON_PORT} --workers=1 --threads=4 app:app & /usr/local/bin/pushgateway
-# CMD systectl start & /usr/local/bin/pushgateway
+ENV EXTRA_CMD="/usr/local/bin/pushgateway"
