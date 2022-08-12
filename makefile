@@ -11,6 +11,7 @@ build b:
 	docker build . -t brianwolf94/jaime-agent:$(VERSION) -f Dockerfile
 	docker build . -t brianwolf94/jaime-agent-kubernetes:$(VERSION) -f Dockerfile.kubernetes
 	docker build . -t brianwolf94/jaime-agent-openshift:$(VERSION) -f Dockerfile.openshift
+	docker build . -t brianwolf94/jaime-agent-pushgateway:$(VERSION) -f Dockerfile.pushgateway
 
 compile c:
 	python -m compile -b -f -o dist/ .
