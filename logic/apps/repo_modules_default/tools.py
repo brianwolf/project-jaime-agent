@@ -175,18 +175,14 @@ current-context: jaime
 
 def new_jaime_work(repo_name: str, module_name: str, agent_type: str, params: Dict[str, object] = {}, name: str = str(uuid4())) -> str:
 
-    params['name'] = name
+    work_dict = {}
+    work_dict['name'] = name
+    work_dict['module_repo'] = repo_name
+    work_dict['module_name'] = module_name
+    work_dict['agent_type'] = agent_type
+    work_dict['params'] = params
 
-    params['module'] = {
-        'repo': repo_name,
-        'name': module_name
-    }
-
-    params['agent'] = {
-        'type': agent_type.upper()
-    }
-
-    yaml_str = str(yaml.dump(params))
+    yaml_str = str(yaml.dump(work_dict))
 
     JAIME_URL = os.getenv('JAIME_URL')
 

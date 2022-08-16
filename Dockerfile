@@ -27,10 +27,10 @@ ENV WORKINGDIR_PATH=/data/workingdir
 ENV TZ America/Argentina/Buenos_Aires
 
 RUN apt-get update
-RUN apt-get install iputils-ping curl git wget supervisor -y
+RUN apt-get install iputils-ping curl git wget -y
 
-COPY ./resources/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-CMD ["/usr/bin/supervisord"]
+ENV EXTRA_CMD="cd ."
+CMD ${EXTRA_CMD} & gunicorn -b ${PYTHON_HOST}:${PYTHON_PORT} --workers=1 --threads=4 app:app
 
 COPY requirements.txt ./
 RUN pip install -r requirements.txt --upgrade pip
