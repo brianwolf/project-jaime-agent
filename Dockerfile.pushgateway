@@ -1,0 +1,9 @@
+FROM brianwolf94/jaime-agent:1.6.0
+
+ENV AGENT_TYPE=PUSHGATEWAY
+
+RUN wget https://github.com/prometheus/pushgateway/releases/download/v1.2.0/pushgateway-1.2.0.linux-amd64.tar.gz
+RUN tar xvfz pushgateway-1.2.0.linux-amd64.tar.gz
+RUN cp pushgateway-1.2.0.linux-amd64/pushgateway /usr/local/bin/
+
+ENV EXTRA_CMD="/usr/local/bin/pushgateway"

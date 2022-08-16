@@ -7,9 +7,8 @@ COPY . .
 
 RUN pip install compile --upgrade pip
 
-RUN	python -m compile -b -f -o dist/ .
+RUN python -m compile -b -f -o dist/ .
 RUN rm -fr dist/repo_modules_default
-
 
 # EXECUTION
 # ---------------------------------------------
@@ -30,11 +29,8 @@ ENV TZ America/Argentina/Buenos_Aires
 RUN apt-get update
 RUN apt-get install iputils-ping curl git wget -y
 
-CMD gunicorn \
-    -b ${PYTHON_HOST}:${PYTHON_PORT} \
-    --workers=1 \
-    --threads=4 \
-    app:app
+ENV EXTRA_CMD="cd ."
+CMD ${EXTRA_CMD} & gunicorn -b ${PYTHON_HOST}:${PYTHON_PORT} --workers=1 --threads=4 app:app
 
 COPY requirements.txt ./
 RUN pip install -r requirements.txt --upgrade pip

@@ -1,7 +1,7 @@
-FROM brianwolf94/jaime-agent:1.5.0
+FROM brianwolf94/jaime-agent:1.6.0
 
 ENV AGENT_TYPE=OPENSHIFT
 
-COPY resources/oc.tar.gz . 
+COPY resources/oc.tar.gz .
 RUN tar -xf oc.tar.gz -C /usr/local/bin/
 RUN rm oc.tar.gz
