@@ -93,3 +93,28 @@ jobs:
         build-args: ARG_VERSION=${{ needs.build-and-push-base.outputs.version }}
     outputs:
       version: ${{ needs.build-and-push-base.outputs.version }}
+
+
+  build-and-push-pushgateway:
+    needs: build-and-push-base
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check Out Repo 
+      uses: actions/checkout@v2
+    - name: Login to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_TOKEN }}
+    - name: Build and push
+      id: docker_build
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        context: ./
+        file: ./Dockerfile.pushgateway
+        tags: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.APP_NAME }}-pushgateway:${{ needs.build-and-push-base.outputs.version }},${{ secrets.DOCKER_USERNAME }}/${{ secrets.APP_NAME }}-pushgateway:latest
+        platforms: linux/amd64
+        build-args: ARG_VERSION=${{ needs.build-and-push-base.outputs.version }}
+    outputs:
+      version: ${{ needs.build-and-push-base.outputs.version }}
