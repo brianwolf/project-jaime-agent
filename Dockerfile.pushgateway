@@ -1,4 +1,4 @@
-FROM brianwolf94/jaime-agent:1.5.0
+FROM brianwolf94/jaime-agent:1.6.0
 
 ENV AGENT_TYPE=PUSHGATEWAY
 
