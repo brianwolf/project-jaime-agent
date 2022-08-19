@@ -1,8 +1,8 @@
 name: Docker Image CI
-
 on:
   push:
-    branches: [ pablo ]
+    tags:
+      - "*"
 jobs:
   get-version:
     runs-on: ubuntu-latest
