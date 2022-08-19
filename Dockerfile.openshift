@@ -1,4 +1,4 @@
-FROM brianwolf94/jaime-agent:1.6.2
+FROM ghcr.io/jaime-project/jaime-agent:1.6.2
 
 ENV AGENT_TYPE=OPENSHIFT
 
