@@ -44,7 +44,7 @@ def _thread_func():
         else:
             try:
                 url = get_var(Vars.JAIME_URL) + '/api/v1/agents/'
-                host = socket.gethostname()
+                host = socket.getfqdn()
 
                 payload = {
                     'host': host,
