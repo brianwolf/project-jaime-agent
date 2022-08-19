@@ -1,7 +1,10 @@
-FROM brianwolf94/jaime-agent:1.6.0
+FROM brianwolf94/jaime-agent:1.6.2
 
 ENV AGENT_TYPE=KUBERNETES
 
 COPY resources/kubectl.tar.gz . 
-RUN tar -xf kubectl.tar.gz -C /usr/local/bin/
+RUN tar -xf kubectl.tar.gz 
 RUN rm kubectl.tar.gz
+
+RUN chmod 755 kubectl
+ENV PATH="$HOME:$PATH"
