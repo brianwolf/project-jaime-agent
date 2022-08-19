@@ -1,4 +1,4 @@
-FROM ghcr.io/jaime-project/jaime-agent:1.6.21
+FROM ghcr.io/jaime-project/jaime-agent:1.6.26
 
 ENV AGENT_TYPE=PUSHGATEWAY
 
