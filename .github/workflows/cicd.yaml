@@ -26,9 +26,12 @@ jobs:
     steps:
     - name: Check Out Repo 
       uses: actions/checkout@v2
-    - name: Log in to registry
-      # This is where you will update the PAT to GITHUB_TOKEN
-      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin      
+    - name: Login to Github Packages
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}    
     - name: Build and push
       id: docker_build
       uses: docker/build-push-action@v2
@@ -36,7 +39,7 @@ jobs:
         push: true
         context: ./
         file: ./Dockerfile
-        tags: ghcr.io/jaime-project/jaime-agent:${{ needs.get-version.outputs.version }} , ${{ secrets.DOCKER_USERNAME }}/${{ secrets.APP_NAME }}:latest
+        tags: ghcr.io/jaime-project/jaime-agent:${{ needs.get-version.outputs.version }} , ghcr.io/jaime-project/jaime-agent:latest
         platforms: linux/amd64
         build-args: ARG_VERSION=${{ needs.get-version.outputs.version }}
     outputs:
