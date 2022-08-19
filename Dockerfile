@@ -42,3 +42,5 @@ RUN rm -fr requirements.txt
 
 COPY --from=compiler /home/src/dist/ ./
 COPY logic/resources logic/resources
+
+EXPOSE 7001

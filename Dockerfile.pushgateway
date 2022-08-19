@@ -10,3 +10,4 @@ RUN chmod 755 pushgateway-1.2.0.linux-amd64 -R
 ENV PATH="$HOME/pushgateway-1.2.0.linux-amd64:$PATH"
 
 ENV EXTRA_CMD="pushgateway"
+EXPOSE 9091
