@@ -47,8 +47,8 @@ jobs:
         context: ./
         file: ./Dockerfile
         tags:  |
-          ghcr.io/${{ github.actor }}/${{ secrets.APP_NAME }}:${{ needs.get-version.outputs.version }} 
-          ghcr.io/${{ github.actor }}/${{ secrets.APP_NAME }}:latest 
+          ghcr.io/jaime-project/${{ secrets.APP_NAME }}:${{ needs.get-version.outputs.version }} 
+          ghcr.io/jaime-project/${{ secrets.APP_NAME }}:latest 
         platforms: linux/amd64
         build-args: ARG_VERSION=${{ needs.get-version.outputs.version }}
     outputs:
