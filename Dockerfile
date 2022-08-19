@@ -14,7 +14,15 @@ RUN rm -fr dist/repo_modules_default
 # ---------------------------------------------
 FROM python:3.9-slim
 
-WORKDIR /home/src
+WORKDIR /home/jaime
+ENV HOME=/home/jaime
+
+RUN apt-get update
+RUN apt-get install iputils-ping curl git wget -y
+
+RUN useradd -ms /bin/bash jaime
+RUN chown -R jaime .
+USER jaime
 
 ARG ARG_VERSION=local
 
@@ -23,14 +31,10 @@ ENV PYTHON_HOST=0.0.0.0
 ENV PYTHON_PORT=7001
 ENV AGENT_TYPE=BASE
 ENV WORKINGDIR_PATH=/data/workingdir
-
 ENV TZ America/Argentina/Buenos_Aires
 
-RUN apt-get update
-RUN apt-get install iputils-ping curl git wget -y
-
 ENV EXTRA_CMD="cd ."
-CMD ${EXTRA_CMD} & gunicorn -b ${PYTHON_HOST}:${PYTHON_PORT} --workers=1 --threads=4 app:app
+CMD ${EXTRA_CMD} & python3 -m gunicorn -b ${PYTHON_HOST}:${PYTHON_PORT} --workers=1 --threads=4 app:app
 
 COPY requirements.txt ./
 RUN pip install -r requirements.txt --upgrade pip
