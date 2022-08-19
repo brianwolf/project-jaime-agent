@@ -46,7 +46,9 @@ jobs:
         push: true
         context: ./
         file: ./Dockerfile
-        tags: ghcr.io/jaime-project/project-jaime-agent/jaime-agent:${{ needs.get-version.outputs.version }}
+        tags:  |
+          ghcr.io/${{ github.actor }}/${{ secrets.APP_NAME }}:${{ needs.get-version.outputs.version }} 
+          ghcr.io/${{ github.actor }}/${{ secrets.APP_NAME }}:latest 
         platforms: linux/amd64
         build-args: ARG_VERSION=${{ needs.get-version.outputs.version }}
     outputs:
