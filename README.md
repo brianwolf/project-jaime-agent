@@ -1,6 +1,5 @@
 # :card_index_dividers: project-jaime-agent
-
-https://github.com/jaime-project/project-jaime-agent/actions/workflows/cicd.yaml/badge.svg?branch=master
+![CI](https://github.com/jaime-project/project-jaime-agent/actions/workflows/cicd.yaml/badge.svg?branch=master)
 
 > Agente de Jaime para usar OC
 
