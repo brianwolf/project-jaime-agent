@@ -1,5 +1,5 @@
 # :card_index_dividers: project-jaime-agent
-![CI](https://github.com/jaime-project/project-jaime-agent/actions/workflows/cicd.yaml/badge.svg?branch=master) [![License](https://img.shields.io/badge/License-Apache_2-green)](#license)
+[![release](https://github.com/jaime-project/project-jaime-agent/actions/workflows/release.yml/badge.svg)](https://github.com/jaime-project/project-jaime-agent/actions/workflows/release.yml) [![License](https://img.shields.io/badge/License-Apache_2-green)](#license)
 
 > Agente de Jaime para usar OC
 
