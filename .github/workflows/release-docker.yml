@@ -1,8 +1,9 @@
 name: Release Docker Images
 on:
-  push:
-    tags:
-      - "*"
+  workflow_run:
+    workflows: ["release"]
+    types:
+      - completed
 jobs:
   release-docker:
     name: Docker build and push
