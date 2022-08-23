@@ -2,18 +2,17 @@ name: prueba
 
 on:
   push:
-    branches: [master]
-      
+    branches: [master]     
 jobs:
-  version:
+  generate-version:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Semantic Release
-        uses: cycjimmy/semantic-release-action@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Semantic Release
+      uses: cycjimmy/semantic-release-action@v3
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Do something when a new release published
       if: steps.semantic.outputs.new_release_published == 'true'
       run: |
