@@ -14,7 +14,7 @@ jobs:
       id: semantic
       with:
         extra_plugins: |
-          #conventional-changelog-conventionalcommits       
+          conventional-changelog-conventionalcommits       
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}     
     - name: Do something when a new release published
