@@ -1,8 +1,8 @@
 name: Release Docker Images
-on: 
-  release:
-    types: 
-      - published
+on:
+  push:
+    tags:
+      - "*"
 jobs:
   release-docker:
     name: Docker build and push
