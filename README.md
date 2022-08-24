@@ -26,7 +26,4 @@ python app.py
 
 ## :grin: Autor
 
-> **Brian Lobo**
 
-* Github: [brianwolf](https://github.com/brianwolf)
-* Docker Hub:  [brianwolf94](https://hub.docker.com/u/brianwolf94)
