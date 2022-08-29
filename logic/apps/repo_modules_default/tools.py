@@ -1,8 +1,8 @@
+import logging
 import os
 import subprocess
 from dataclasses import dataclass
-from pathlib import Path
-from pydoc import text
+from logging.handlers import WatchedFileHandler
 from typing import Dict, List
 from uuid import uuid4
 
@@ -75,7 +75,7 @@ def _get_server_client(server_name: str) -> "ServerClient":
 # PUBLIC
 # ==========================================================
 
-def ssh(server_name: str, cmd: str, echo: bool = True) -> str:
+def ssh(server_name: str, cmd: str, echo: bool = False) -> str:
 
     if echo:
         print(cmd)
@@ -96,7 +96,7 @@ def ssh(server_name: str, cmd: str, echo: bool = True) -> str:
     return ssh_stdout if ssh_stdout else ""
 
 
-def sh(cmd: str, echo: bool = True) -> str:
+def sh(cmd: str, echo: bool = False) -> str:
 
     if echo:
         print(cmd)
@@ -191,3 +191,19 @@ def new_jaime_work(repo_name: str, module_name: str, agent_type: str, params: Di
         data=yaml_str,
         headers={'Content-Type': 'text/plain; charset=utf-8'}
     ).text
+
+
+def logger() -> logging.Logger:
+
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s (%(process)d) - %(levelname)s - %(message)s')
+
+    fh = WatchedFileHandler('logs.log')
+    fh.setLevel('DEBUG')
+    fh.setFormatter(formatter)
+
+    logger = logging.getLogger()
+    logger.setLevel('DEBUG')
+    logger.addHandler(fh)
+
+    return logger
