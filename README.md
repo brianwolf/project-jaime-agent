@@ -2,7 +2,7 @@
 
 > Agente de Jaime para usar OC
 
-![alt](img/logo-negro.png)
+![alt](img/logo.png)
 
 ## :gear: Requisitos
 
