@@ -1,0 +1,63 @@
+name: Release Docker Images
+on: 
+  release:
+    types: 
+      - published      
+jobs:
+  release-docker:
+    name: Docker build and push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: master
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2  
+      - name: Login to Github Packages
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}   
+      - name: Build and push base
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: ./
+          file: ./Dockerfile
+          tags: ghcr.io/jaime-project/${{ secrets.APP_NAME }}:${{ steps.semantic.outputs.new_release_version }} 
+          platforms: linux/amd64
+          build-args: ARG_VERSION=${{ steps.semantic.outputs.new_release_version }}
+      - name: Build and push k8s
+        id: docker_build_k8s
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: ./
+          file: ./Dockerfile.kubernetes
+          tags: ghcr.io/jaime-project/${{ secrets.APP_NAME }}-kubernetes:${{ steps.semantic.outputs.new_release_version }} 
+          platforms: linux/amd64
+          build-args: ARG_VERSION=${{ steps.semantic.outputs.new_release_version }}
+      - name: Build and push ocp
+        id: docker_build_ocp
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: ./
+          file: ./Dockerfile.openshift
+          tags: ghcr.io/jaime-project/${{ secrets.APP_NAME }}-openshift:${{ steps.semantic.outputs.new_release_version }} 
+          platforms: linux/amd64
+          build-args: ARG_VERSION=${{ steps.semantic.outputs.new_release_version }}
+      - name: Build and push pushgateway
+        id: docker_build_pushgateway
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: ./
+          file: ./Dockerfile.pushgateway
+          tags: ghcr.io/jaime-project/${{ secrets.APP_NAME }}-pushgateway:${{ steps.semantic.outputs.new_release_version }} 
+          platforms: linux/amd64
+          build-args: ARG_VERSION=${{ steps.semantic.outputs.new_release_version }}           

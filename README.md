@@ -1,4 +1,5 @@
 # :card_index_dividers: project-jaime-agent
+[![release](https://github.com/jaime-project/project-jaime-agent/actions/workflows/release.yml/badge.svg)](https://github.com/jaime-project/project-jaime-agent/actions/workflows/release.yml) [![License](https://img.shields.io/badge/License-Apache_2-green)](#license)
 
 > Agente de Jaime para usar OC
 
@@ -25,7 +26,4 @@ python app.py
 
 ## :grin: Autor
 
-> **Brian Lobo**
 
-* Github: [brianwolf](https://github.com/brianwolf)
-* Docker Hub:  [brianwolf94](https://hub.docker.com/u/brianwolf94)

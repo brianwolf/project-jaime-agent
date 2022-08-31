@@ -1,0 +1,78 @@
+name: Compile and Release
+on:
+  push:
+    branches: [master]     
+jobs:
+  release-version:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3     
+    - name: Release to GitHub
+      uses: cycjimmy/semantic-release-action@v3
+      id: semantic
+      with:
+        extra_plugins: |
+          conventional-changelog-conventionalcommits       
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}     
+    - name: Do something when a new release published
+      if: steps.semantic.outputs.new_release_published == 'true'
+      run: |
+        echo ${{ steps.semantic.outputs.new_release_version }}
+    - name: Set up Docker Buildx
+      if: steps.semantic.outputs.new_release_published == 'true'    
+      id: buildx
+      uses: docker/setup-buildx-action@v2  
+    - name: Login to Github Packages
+      if: steps.semantic.outputs.new_release_published == 'true'    
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}   
+    - name: Build and push base
+      if: steps.semantic.outputs.new_release_published == 'true'    
+      id: docker_build
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        context: ./
+        file: ./Dockerfile
+        tags: ghcr.io/jaime-project/${{ secrets.APP_NAME }}:${{ steps.semantic.outputs.new_release_version }} 
+        platforms: linux/amd64
+        build-args: ARG_VERSION=${{ steps.semantic.outputs.new_release_version }}
+    - name: Build and push k8s
+      if: steps.semantic.outputs.new_release_published == 'true'    
+      id: docker_build_k8s
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        context: ./
+        file: ./Dockerfile.kubernetes
+        tags: ghcr.io/jaime-project/${{ secrets.APP_NAME }}-kubernetes:${{ steps.semantic.outputs.new_release_version }} 
+        platforms: linux/amd64
+        build-args: ARG_VERSION=${{ steps.semantic.outputs.new_release_version }}
+    - name: Build and push ocp
+      if: steps.semantic.outputs.new_release_published == 'true'    
+      id: docker_build_ocp
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        context: ./
+        file: ./Dockerfile.openshift
+        tags: ghcr.io/jaime-project/${{ secrets.APP_NAME }}-openshift:${{ steps.semantic.outputs.new_release_version }} 
+        platforms: linux/amd64
+        build-args: ARG_VERSION=${{ steps.semantic.outputs.new_release_version }}
+    - name: Build and push pushgateway
+      if: steps.semantic.outputs.new_release_published == 'true'    
+      id: docker_build_pushgateway
+      uses: docker/build-push-action@v2
+      with:
+        push: true
+        context: ./
+        file: ./Dockerfile.pushgateway
+        tags: ghcr.io/jaime-project/${{ secrets.APP_NAME }}-pushgateway:${{ steps.semantic.outputs.new_release_version }} 
+        platforms: linux/amd64
+        build-args: ARG_VERSION=${{ steps.semantic.outputs.new_release_version }}  
+        
