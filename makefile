@@ -9,9 +9,15 @@ install i:
 
 build b:
 	podman build . -t ghcr.io/jaime-project/jaime-agent:$(VERSION) -f Dockerfile --build-arg ARG_VERSION=$(VERSION)
-	podman build . -t ghcr.io/jaime-project/jaime-agent-kubernetes:$(VERSION) -f Dockerfile.kubernetes
-	podman build . -t ghcr.io/jaime-project/jaime-agent-openshift:$(VERSION) -f Dockerfile.openshift
-	podman build . -t ghcr.io/jaime-project/jaime-agent-pushgateway:$(VERSION) -f Dockerfile.pushgateway
+	podman build . -t ghcr.io/jaime-project/jaime-agent-kubernetes:$(VERSION) -f Dockerfile.kubernetes --build-arg ARG_VERSION=$(VERSION)
+	podman build . -t ghcr.io/jaime-project/jaime-agent-openshift:$(VERSION) -f Dockerfile.openshift --build-arg ARG_VERSION=$(VERSION)
+	podman build . -t ghcr.io/jaime-project/jaime-agent-pushgateway:$(VERSION) -f Dockerfile.pushgateway --build-arg ARG_VERSION=$(VERSION)
+
+push p:
+	podman push ghcr.io/jaime-project/jaime-agent:$(VERSION)
+	podman push ghcr.io/jaime-project/jaime-agent-kubernetes:$(VERSION) 
+	podman push ghcr.io/jaime-project/jaime-agent-openshift:$(VERSION) 
+	podman push ghcr.io/jaime-project/jaime-agent-pushgateway:$(VERSION) 
 
 compile c:
 	python -m compile -b -f -o dist/ .
