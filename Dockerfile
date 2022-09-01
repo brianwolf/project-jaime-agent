@@ -3,11 +3,10 @@
 FROM python:3.9-slim as compiler
 
 WORKDIR /home/jaime
-COPY . . 
 
-RUN useradd -m -d /home/jaime jaime
 RUN chmod 777 -R .
-USER jaime
+
+COPY . . 
 
 RUN pip install compile
 
@@ -18,15 +17,14 @@ RUN rm -fr dist/repo_modules_default
 # ---------------------------------------------
 FROM python:3.9-slim
 
-WORKDIR /home/jaime
-ENV HOME=/home/jaime
-
 RUN apt-get update
 RUN apt-get install iputils-ping curl git wget -y
 
-RUN useradd -m -d /home/jaime jaime
+WORKDIR /home/jaime
+ENV HOME=/home/jaime
+
 RUN chmod 777 -R .
-USER jaime
+
 
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
@@ -42,7 +40,6 @@ ENV PYTHON_HOST=0.0.0.0
 ENV PYTHON_PORT=7001
 ENV AGENT_TYPE=BASE
 ENV WORKINGDIR_PATH=/data/workingdir
-ENV USER=jaime
 ENV TZ America/Argentina/Buenos_Aires
 
 ENV EXTRA_CMD="cd ."

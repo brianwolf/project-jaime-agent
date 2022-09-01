@@ -49,7 +49,7 @@ def _exec(id: str):
     name_file_runner_final = 'runner.pyc' if os.path.exists(
         os.path.join(base_path, 'runner.pyc')) else 'runner.py'
 
-    cmd = f'cd {base_path} && > {_NAME_FILE_LOGS} && python3 {name_file_runner_final}'
+    cmd = f'cd {base_path} && > {_NAME_FILE_LOGS} && python {name_file_runner_final}'
 
     process = subprocess.Popen(cmd, shell=True)
     process.wait()
