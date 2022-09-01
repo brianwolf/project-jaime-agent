@@ -1,4 +1,4 @@
-VERSION=1.7.2
+VERSION=1.7.4
 
 install i:
 	virtualenv -p python3.9 env

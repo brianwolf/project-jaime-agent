@@ -6,3 +6,4 @@ LOGS_BACKUPS: 3
 JAIME_URL: http://localhost:5000
 AGENT_TYPE: BASE
 WORKINGDIR_PATH: /tmp/workingdir
+USER: jaime
