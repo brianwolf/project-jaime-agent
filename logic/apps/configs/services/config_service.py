@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
-import subprocess
 from datetime import datetime
+from logic.apps.admin.config.variables import get_var, Vars
 
 from logic.apps.filesystem.services import filesystem_service
 
@@ -15,7 +15,8 @@ def update_requirements(content: str):
 
     filesystem_service.create_file(requirements_temp_path, content)
 
-    os.system(f'pip install -r {requirements_temp_path}')
+
+    os.system(f'pip install -r {requirements_temp_path} --target {get_var(Vars.USER)}')
 
 
 def get_logs() -> str:

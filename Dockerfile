@@ -42,6 +42,7 @@ ENV PYTHON_HOST=0.0.0.0
 ENV PYTHON_PORT=7001
 ENV AGENT_TYPE=BASE
 ENV WORKINGDIR_PATH=/data/workingdir
+ENV USER=jaime
 ENV TZ America/Argentina/Buenos_Aires
 
 ENV EXTRA_CMD="cd ."
