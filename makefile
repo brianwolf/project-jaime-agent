@@ -1,4 +1,4 @@
-VERSION=1.6.26
+VERSION=1.7.1
 
 install i:
 	virtualenv -p python3.9 env
@@ -8,7 +8,7 @@ install i:
 	. env/bin/deactivate
 
 build b:
-	podman build . -t ghcr.io/jaime-project/jaime-agent:$(VERSION) -f Dockerfile
+	podman build . -t ghcr.io/jaime-project/jaime-agent:$(VERSION) -f Dockerfile --build-arg ARG_VERSION=$(VERSION)
 	podman build . -t ghcr.io/jaime-project/jaime-agent-kubernetes:$(VERSION) -f Dockerfile.kubernetes
 	podman build . -t ghcr.io/jaime-project/jaime-agent-openshift:$(VERSION) -f Dockerfile.openshift
 	podman build . -t ghcr.io/jaime-project/jaime-agent-pushgateway:$(VERSION) -f Dockerfile.pushgateway
