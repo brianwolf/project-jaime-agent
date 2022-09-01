@@ -15,7 +15,7 @@ def update_requirements(content: str):
 
     filesystem_service.create_file(requirements_temp_path, content)
 
-    os.system(f'pip3 install -r {requirements_temp_path} --upgrade pip')
+    os.system(f'pip install -r {requirements_temp_path}')
 
 
 def get_logs() -> str:
