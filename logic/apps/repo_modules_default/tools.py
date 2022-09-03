@@ -35,54 +35,50 @@ class ServerClient():
 
 
 def _get_cluster_client(cluster_name: str) -> "ClusterClient":
+    try:
+        JAIME_URL = os.getenv('JAIME_URL')
+        cluster_dict = requests.get(
+            f'{JAIME_URL}/api/v1/clusters/{cluster_name}').json()
 
-    with open(_CLUSTER_FILE_NAME, 'r') as f:
-        clusters_dict = yaml.load(f.read(), Loader=yaml.FullLoader)
+    except Exception:
+        raise Exception('Error on get clusters')
 
-    for s in clusters_dict:
-
-        if s['name'] == cluster_name:
-            return ClusterClient(
-                url=s['url'],
-                token=s['token'],
-                version=s['version']
-            )
-
-    if not cluster_name in clusters_dict:
-        raise Exception(f'No existe el cluster de nombre {cluster_name}')
+    return ClusterClient(
+        url=cluster_dict['url'],
+        token=cluster_dict['token'],
+        version=cluster_dict['version']
+    )
 
 
 def _get_server_client(server_name: str) -> "ServerClient":
+    try:
+        JAIME_URL = os.getenv('JAIME_URL')
+        server_dict = requests.get(
+            f'{JAIME_URL}/api/v1/servers/{server_name}').json()
 
-    with open(_SERVER_FILE_NAME, 'r') as f:
-        servers_dict = yaml.load(f.read(), Loader=yaml.FullLoader)
+    except Exception:
+        raise Exception('Error on get clusters')
 
-    for s in servers_dict:
-
-        if s['name'] == server_name:
-            return ServerClient(
-                host=s['host'],
-                port=s['port'],
-                user=s['user'],
-                password=s['password']
-            )
-
-    if not server_name in servers_dict:
-        raise Exception(f'No existe el server de nombre {server_name}')
-
+    return ServerClient(
+        host=server_dict['host'],
+        port=server_dict['port'],
+        user=server_dict['user'],
+        password=server_dict['password']
+    )
 
 # ==========================================================
 # PUBLIC
 # ==========================================================
 
+
 # LOGGER
 formatter = logging.Formatter(
     '%(asctime)s - %(name)s (%(process)d) - %(levelname)s - %(message)s')
 fh = WatchedFileHandler('logs.log')
-fh.setLevel('DEBUG')
+fh.setLevel('INFO')
 fh.setFormatter(formatter)
 log = logging.getLogger()
-log.setLevel('DEBUG')
+log.setLevel('INFO')
 log.addHandler(fh)
 
 
@@ -121,19 +117,21 @@ def sh(cmd: str, echo: bool = False) -> str:
 
 
 def get_clusters_name() -> List[str]:
+    try:
+        JAIME_URL = os.getenv('JAIME_URL')
+        return requests.get(f'{JAIME_URL}/api/v1/clusters/').json()
 
-    with open(_CLUSTER_FILE_NAME, 'r') as f:
-        clusters_dict = yaml.load(f.read(), Loader=yaml.FullLoader)
-
-    return clusters_dict.keys()
+    except Exception as e:
+        raise Exception('Error on get clusters')
 
 
 def get_servers_name() -> List[str]:
+    try:
+        JAIME_URL = os.getenv('JAIME_URL')
+        return requests.get(f'{JAIME_URL}/api/v1/servers/').json()
 
-    with open(_SERVER_FILE_NAME, 'r') as f:
-        servers_dict = yaml.load(f.read(), Loader=yaml.FullLoader)
-
-    return servers_dict.keys()
+    except Exception as e:
+        raise Exception('Error on get clusters')
 
 
 def get_params() -> Dict[str, object]:
