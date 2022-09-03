@@ -75,6 +75,17 @@ def _get_server_client(server_name: str) -> "ServerClient":
 # PUBLIC
 # ==========================================================
 
+# LOGGER
+formatter = logging.Formatter(
+    '%(asctime)s - %(name)s (%(process)d) - %(levelname)s - %(message)s')
+fh = WatchedFileHandler('logs.log')
+fh.setLevel('DEBUG')
+fh.setFormatter(formatter)
+log = logging.getLogger()
+log.setLevel('DEBUG')
+log.addHandler(fh)
+
+
 def ssh(server_name: str, cmd: str, echo: bool = False) -> str:
 
     if echo:
@@ -191,19 +202,3 @@ def new_jaime_work(repo_name: str, module_name: str, agent_type: str, params: Di
         data=yaml_str,
         headers={'Content-Type': 'text/plain; charset=utf-8'}
     ).text
-
-
-def logger() -> logging.Logger:
-
-    formatter = logging.Formatter(
-        '%(asctime)s - %(name)s (%(process)d) - %(levelname)s - %(message)s')
-
-    fh = WatchedFileHandler('logs.log')
-    fh.setLevel('DEBUG')
-    fh.setFormatter(formatter)
-
-    logger = logging.getLogger()
-    logger.setLevel('DEBUG')
-    logger.addHandler(fh)
-
-    return logger
