@@ -1,7 +1,8 @@
+import subprocess
 import sys
 
-sys.stdout = open('logs.log', 'w')
-sys.stderr = open('logs.log', 'w')
+sys.stdout = open('logs.log', 'a')
+sys.stderr = open('logs.log', 'a')
 
 try:
     import module
