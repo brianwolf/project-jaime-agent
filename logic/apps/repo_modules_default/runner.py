@@ -1,4 +1,3 @@
-import subprocess
 import sys
 
 sys.stdout = open('logs.log', 'a')
