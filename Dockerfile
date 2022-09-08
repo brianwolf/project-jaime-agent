@@ -2,9 +2,9 @@
 # ---------------------------------------------
 FROM python:3.9-slim as compiler
 
-WORKDIR /home/jaime
+RUN mkdir -m 777 /home/jaime
 
-RUN chmod 777 -R .
+WORKDIR /home/jaime
 
 COPY . . 
 
@@ -20,11 +20,10 @@ FROM python:3.9-slim
 RUN apt-get update
 RUN apt-get install iputils-ping curl git wget -y
 
+RUN mkdir -m 777 /home/jaime
+
 WORKDIR /home/jaime
 ENV HOME=/home/jaime
-
-RUN chmod 777 -R .
-
 
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
