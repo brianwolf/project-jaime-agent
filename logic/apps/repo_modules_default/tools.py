@@ -14,8 +14,6 @@ import yaml
 # PRIVATE
 # ==========================================================
 
-_SERVER_FILE_NAME = 'servers.yaml'
-_CLUSTER_FILE_NAME = 'clusters.yaml'
 _PARAMS_FILE_NAME = 'params.yaml'
 
 
@@ -171,8 +169,8 @@ users:
 contexts:
 - context:
     cluster: jaime
-    namespace: default
     user: jaime
+    namespace: default
   name: jaime
 current-context: jaime
         """)
