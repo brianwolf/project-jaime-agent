@@ -72,18 +72,18 @@ def _get_server_client(server_name: str) -> "ServerClient":
 # LOGGER
 formatter = logging.Formatter(
     '%(asctime)s - %(name)s (%(process)d) - %(levelname)s - %(message)s')
-fh = WatchedFileHandler('logs.log')
-fh.setLevel('INFO')
-fh.setFormatter(formatter)
 log = logging.getLogger()
-log.setLevel('INFO')
+log.setLevel('DEBUG')
+fh = WatchedFileHandler('logs.log')
+fh.setLevel('DEBUG')
+fh.setFormatter(formatter)
 log.addHandler(fh)
 
 
 def ssh(server_name: str, cmd: str, echo: bool = False) -> str:
 
     if echo:
-        print(cmd)
+        log.info(cmd)
 
     server = _get_server_client(server_name)
 
@@ -93,10 +93,10 @@ def ssh(server_name: str, cmd: str, echo: bool = False) -> str:
     _, ssh_stdout, ssh_stderr = ssh.exec_command(cmd)
 
     if echo and ssh_stdout:
-        print(ssh_stdout)
+        log.info(ssh_stdout)
 
     if echo and ssh_stderr:
-        print(ssh_stderr)
+        log.info(ssh_stderr)
 
     return ssh_stdout if ssh_stdout else ""
 
@@ -104,12 +104,12 @@ def ssh(server_name: str, cmd: str, echo: bool = False) -> str:
 def sh(cmd: str, echo: bool = False) -> str:
 
     if echo:
-        print(cmd)
+        log.info(cmd)
 
     result = subprocess.getoutput(cmd)
 
     if echo and result:
-        print(result)
+        log.info(result)
 
     return result if result else ""
 
