@@ -1,3 +1,4 @@
+import os
 import socket
 import subprocess
 import time
@@ -11,6 +12,7 @@ from logic.libs.logger.logger import logger
 
 _THREAD_CONNECTION_JAIME_ACTIVE = True
 _TIME_BETWEEN_REQUESTS_SECONDS = 5
+_JAIME_TOKEN = None
 
 
 def connect_with_jaime():
@@ -32,8 +34,10 @@ def _thread_func():
 
         if connected_with_jaime:
             try:
-                url = get_var(Vars.JAIME_URL)
-                requests.get(url, timeout=5, verify=False)
+                url = get_var(Vars.JAIME_URL) + '/api/v1/login/refresh'
+                token = os.getenv('JAIME_TOKEN')
+                headers = {'Authorization': f'Bearer {token}'}
+                requests.get(url, timeout=5, verify=False, headers=headers)
 
             except Exception as e:
                 logger().error(
@@ -53,7 +57,10 @@ def _thread_func():
                     'id': app.get_id_agent()
                 }
 
-                requests.post(url, json=payload, timeout=5, verify=False)
+                token = requests.post(
+                    url, json=payload, timeout=5, verify=False).text
+
+                os.environ['JAIME_TOKEN'] = token
                 connected_with_jaime = True
 
                 logger().info(
@@ -63,6 +70,7 @@ def _thread_func():
                 logger().error(
                     f'Error en coneccion con Jaime -> reintentando en {_TIME_BETWEEN_REQUESTS_SECONDS} seg')
                 logger().error(e)
+
         time.sleep(_TIME_BETWEEN_REQUESTS_SECONDS)
 
 

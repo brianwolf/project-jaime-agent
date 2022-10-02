@@ -1,5 +1,4 @@
 import os
-import shutil
 import subprocess
 from multiprocessing import Process
 from typing import Any, Dict, List
@@ -9,7 +8,6 @@ from logic.apps.admin.config.variables import Vars, get_var
 from logic.apps.filesystem.services import workingdir_service
 from logic.apps.works.models.work_model import StatusFinished
 from logic.libs.logger.logger import logger
-
 
 _WORKS_RUNING: Dict[str, Process] = {}
 
@@ -63,4 +61,7 @@ def _notify_work_end(id: str, status: StatusFinished):
     url = get_var(Vars.JAIME_URL) + f'/api/v1/works/{id}/finish'
     body = {"status": status.value}
 
-    requests.patch(url, json=body, timeout=5, verify=False)
+    token = os.getenv('JAIME_TOKEN')
+    headers = {'Authorization': f'Bearer {token}'}
+
+    requests.patch(url, json=body, timeout=5, verify=False, headers=headers)
