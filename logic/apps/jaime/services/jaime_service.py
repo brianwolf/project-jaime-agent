@@ -36,7 +36,12 @@ def _thread_func():
                 url = get_var(Vars.JAIME_URL) + '/api/v1/login/refresh'
                 token = os.getenv('JAIME_TOKEN')
                 headers = {'Authorization': f'Bearer {token}'}
-                requests.get(url, timeout=5, verify=False, headers=headers)
+                result = requests.get(
+                    url, timeout=5, verify=False, headers=headers)
+
+                if result.status_code != 200:
+                    raise Exception(
+                        f'Error status code from Jaime response -> {result.status_code}')
 
             except Exception as e:
                 logger().error(
@@ -63,7 +68,6 @@ def _thread_func():
                         f'Error status code from Jaime response -> {result.status_code}')
 
                 token = result.text
-
                 os.environ['JAIME_TOKEN'] = token
                 connected_with_jaime = True
 
