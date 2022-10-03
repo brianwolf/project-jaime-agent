@@ -12,7 +12,6 @@ from logic.libs.logger.logger import logger
 
 _THREAD_CONNECTION_JAIME_ACTIVE = True
 _TIME_BETWEEN_REQUESTS_SECONDS = 5
-_JAIME_TOKEN = None
 
 
 def connect_with_jaime():
@@ -57,8 +56,13 @@ def _thread_func():
                     'id': app.get_id_agent()
                 }
 
-                token = requests.post(
-                    url, json=payload, timeout=5, verify=False).text
+                result = requests.post(
+                    url, json=payload, timeout=5, verify=False)
+                if result.status_code != 201:
+                    raise Exception(
+                        f'Error status code from Jaime response -> {result.status_code}')
+
+                token = result.text
 
                 os.environ['JAIME_TOKEN'] = token
                 connected_with_jaime = True

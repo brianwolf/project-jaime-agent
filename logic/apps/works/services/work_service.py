@@ -56,12 +56,16 @@ def delete(id: str):
 
 def _notify_work_end(id: str, status: StatusFinished):
 
-    logger().info(f'Proceso terminado -> {id}')
-
     url = get_var(Vars.JAIME_URL) + f'/api/v1/works/{id}/finish'
     body = {"status": status.value}
 
     token = os.getenv('JAIME_TOKEN')
+    print(token)
     headers = {'Authorization': f'Bearer {token}'}
 
-    requests.patch(url, json=body, timeout=5, verify=False, headers=headers)
+    result = requests.patch(url, json=body, timeout=5,
+                            verify=False, headers=headers)
+    if result.status_code != 200:
+        raise Exception(f'Error Jaime status code -> {result.status_code}')
+
+    logger().info(f'Proceso terminado -> {id}')
