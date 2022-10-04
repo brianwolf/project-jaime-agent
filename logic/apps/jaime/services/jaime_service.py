@@ -1,3 +1,4 @@
+import os
 import socket
 import subprocess
 import time
@@ -32,8 +33,15 @@ def _thread_func():
 
         if connected_with_jaime:
             try:
-                url = get_var(Vars.JAIME_URL)
-                requests.get(url, timeout=5, verify=False)
+                url = get_var(Vars.JAIME_URL) + '/api/v1/login/refresh'
+                token = os.getenv('JAIME_TOKEN')
+                headers = {'Authorization': f'Bearer {token}'}
+                result = requests.get(
+                    url, timeout=5, verify=False, headers=headers)
+
+                if result.status_code != 200:
+                    raise Exception(
+                        f'Error status code from Jaime response -> {result.status_code}')
 
             except Exception as e:
                 logger().error(
@@ -53,7 +61,14 @@ def _thread_func():
                     'id': app.get_id_agent()
                 }
 
-                requests.post(url, json=payload, timeout=5, verify=False)
+                result = requests.post(
+                    url, json=payload, timeout=5, verify=False)
+                if result.status_code != 201:
+                    raise Exception(
+                        f'Error status code from Jaime response -> {result.status_code}')
+
+                token = result.text
+                os.environ['JAIME_TOKEN'] = token
                 connected_with_jaime = True
 
                 logger().info(
@@ -63,6 +78,7 @@ def _thread_func():
                 logger().error(
                     f'Error en coneccion con Jaime -> reintentando en {_TIME_BETWEEN_REQUESTS_SECONDS} seg')
                 logger().error(e)
+
         time.sleep(_TIME_BETWEEN_REQUESTS_SECONDS)
 
 
