@@ -36,17 +36,16 @@ def _thread_func():
                 url = get_var(Vars.JAIME_URL) + '/api/v1/login/refresh'
                 token = os.getenv('JAIME_TOKEN')
                 headers = {'Authorization': f'Bearer {token}'}
-                result = requests.get(
-                    url, timeout=5, verify=False, headers=headers)
+                result = requests.get(url, verify=False, headers=headers)
 
                 if result.status_code != 200:
                     raise Exception(
                         f'Error status code from Jaime response -> {result.status_code}')
 
             except Exception as e:
+                logger().error(e)
                 logger().error(
                     f'Se perdio la coneccion con Jaime -> reintentando en {_TIME_BETWEEN_REQUESTS_SECONDS} seg')
-                logger().error(e)
                 connected_with_jaime = False
 
         else:
@@ -61,8 +60,7 @@ def _thread_func():
                     'id': app.get_id_agent()
                 }
 
-                result = requests.post(
-                    url, json=payload, timeout=5, verify=False)
+                result = requests.post(url, json=payload, verify=False)
                 if result.status_code != 201:
                     raise Exception(
                         f'Error status code from Jaime response -> {result.status_code}')
@@ -75,9 +73,9 @@ def _thread_func():
                     f"Coneccion exitosa con Jaime -> URL: {get_var(Vars.JAIME_URL)}")
 
             except Exception as e:
+                logger().error(e)
                 logger().error(
                     f'Error en coneccion con Jaime -> reintentando en {_TIME_BETWEEN_REQUESTS_SECONDS} seg')
-                logger().error(e)
 
         time.sleep(_TIME_BETWEEN_REQUESTS_SECONDS)
 
