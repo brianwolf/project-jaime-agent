@@ -11,7 +11,7 @@ from logic.apps.admin.config.variables import Vars, get_var
 from logic.libs.logger.logger import logger
 
 _THREAD_CONNECTION_JAIME_ACTIVE = True
-_TIME_BETWEEN_REQUESTS_SECONDS = 5
+_TIME_BETWEEN_REQUESTS_SECONDS = 10
 
 
 def connect_with_jaime():
