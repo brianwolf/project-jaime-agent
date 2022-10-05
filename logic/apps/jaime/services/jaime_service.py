@@ -11,7 +11,7 @@ from logic.apps.admin.config.variables import Vars, get_var
 from logic.libs.logger.logger import logger
 
 _THREAD_CONNECTION_JAIME_ACTIVE = True
-_TIME_BETWEEN_REQUESTS_SECONDS = 10
+_TIME_BETWEEN_REQUESTS_SECONDS = 5
 
 
 def connect_with_jaime():
@@ -25,59 +25,63 @@ def connect_with_jaime():
 
 def _thread_func():
 
-    time.sleep(_TIME_BETWEEN_REQUESTS_SECONDS)
-
     connected_with_jaime = False
 
     while _THREAD_CONNECTION_JAIME_ACTIVE:
 
-        if connected_with_jaime:
-            try:
-                url = get_var(Vars.JAIME_URL) + '/api/v1/login/refresh'
-                token = os.getenv('JAIME_TOKEN')
-                headers = {'Authorization': f'Bearer {token}'}
-                result = requests.get(url, verify=False, headers=headers)
+        try:
+            if connected_with_jaime:
+                connected_with_jaime = _refresh_token_ok()
+            else:
+                connected_with_jaime = _get_token_ok()
 
-                if result.status_code != 200:
-                    raise Exception(
-                        f'Error status code from Jaime response -> {result.status_code}')
-
-            except Exception as e:
-                logger().error(e)
-                logger().error(
-                    f'Se perdio la coneccion con Jaime -> reintentando en {_TIME_BETWEEN_REQUESTS_SECONDS} seg')
-                connected_with_jaime = False
-
-        else:
-            try:
-                url = get_var(Vars.JAIME_URL) + '/api/v1/agents/'
-                host = socket.getfqdn()
-
-                payload = {
-                    'host': host,
-                    'port': get_var(Vars.PYTHON_PORT),
-                    'type': get_var(Vars.AGENT_TYPE).upper(),
-                    'id': app.get_id_agent()
-                }
-
-                result = requests.post(url, json=payload, verify=False)
-                if result.status_code != 201:
-                    raise Exception(
-                        f'Error status code from Jaime response -> {result.status_code}')
-
-                token = result.text
-                os.environ['JAIME_TOKEN'] = token
-                connected_with_jaime = True
-
-                logger().info(
-                    f"Coneccion exitosa con Jaime -> URL: {get_var(Vars.JAIME_URL)}")
-
-            except Exception as e:
-                logger().error(e)
-                logger().error(
-                    f'Error en coneccion con Jaime -> reintentando en {_TIME_BETWEEN_REQUESTS_SECONDS} seg')
+        except Exception as e:
+            logger().error(e)
+            logger().error(
+                f'Error en conexion con Jaime -> reintentando en {_TIME_BETWEEN_REQUESTS_SECONDS} seg')
+            connected_with_jaime = False
 
         time.sleep(_TIME_BETWEEN_REQUESTS_SECONDS)
+
+
+def _refresh_token_ok() -> bool:
+
+    url = get_var(Vars.JAIME_URL) + '/api/v1/login/refresh'
+    token = os.getenv('JAIME_TOKEN')
+    headers = {'Authorization': f'Bearer {token}'}
+
+    result = requests.get(url, verify=False, headers=headers)
+
+    if result.status_code != 200:
+        logger().warning(
+            f'Error en conexion con Jaime -> {result.status_code}')
+        return False
+
+    return True
+
+
+def _get_token_ok() -> bool:
+
+    url = get_var(Vars.JAIME_URL) + '/api/v1/agents/'
+    payload = {
+        'host': socket.getfqdn(),
+        'port': get_var(Vars.PYTHON_PORT),
+        'type': get_var(Vars.AGENT_TYPE).upper(),
+        'id': app.get_id_agent()
+    }
+
+    result = requests.post(url, json=payload, verify=False)
+    token = result.text
+
+    if not token:
+        logger().warning(
+            f"Error en conexion con Jaime -> {result.status_code}")
+        return False
+
+    os.environ['JAIME_TOKEN'] = token
+    logger().info(
+        f"Conexion exitosa con Jaime -> URL: {get_var(Vars.JAIME_URL)}")
+    return True
 
 
 def disconnect_with_jaime():
