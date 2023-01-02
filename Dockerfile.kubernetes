@@ -1,4 +1,6 @@
-FROM ghcr.io/jaime-project/jaime-agent:latest
+ARG ARG_VERSION=local
+
+FROM ghcr.io/jaime-project/jaime-agent:${ARG_VERSION}
 
 ENV AGENT_TYPE=KUBERNETES
 
