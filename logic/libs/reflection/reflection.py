@@ -16,7 +16,6 @@ def get_module_by_path(module_path: str) -> ModuleType:
     """
     Carga el modulo del archivo python del a ruta parametro, no ejecuta nada, solo hace un import y devuelve el modulo importado
     """
-
     module_name = load_modules.file_name(module_path)
 
     spec = spec_from_file_location(module_name, module_path)
