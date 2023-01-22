@@ -57,7 +57,7 @@ def delete(id: str):
 
 def _notify_work_end(id: str, status: StatusFinished):
 
-    url = get_var(Vars.JAIME_URL) + f'/api/v1/works/{id}/finish'
+    url = get_var(Vars.JAIME_URL) + f'/api/v1/jobs/{id}/finish'
     body = {"status": status.value}
 
     token = os.getenv('JAIME_TOKEN')
