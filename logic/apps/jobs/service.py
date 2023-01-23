@@ -4,17 +4,18 @@ from multiprocessing import Process
 from typing import Any, Dict, List
 
 import requests
-from logic.apps.admin.config.variables import Vars, get_var
-from logic.apps.filesystem.services import workingdir_service
-from logic.apps.works.models.work_model import StatusFinished
-from logic.libs.logger.logger import logger
+
+from logic.apps.admin.configs.variables import Vars, get_var
+from logic.apps.filesystem import workingdir_service
+from logic.apps.jobs.model import StatusFinished
+from logic.libs.logger import logger
 
 _WORKS_RUNING: Dict[str, Process] = {}
 
 
 def exec(id: str):
 
-    logger().info(f'Recibiendo proceso para ejecutar -> {id}')
+    logger.log.info(f'Recibiendo proceso para ejecutar -> {id}')
 
     base_path = workingdir_service.fullpath(id)
 
@@ -56,7 +57,7 @@ def delete(id: str):
 
 def _notify_work_end(id: str, status: StatusFinished):
 
-    url = get_var(Vars.JAIME_URL) + f'/api/v1/works/{id}/finish'
+    url = get_var(Vars.JAIME_URL) + f'/api/v1/jobs/{id}/finish'
     body = {"status": status.value}
 
     token = os.getenv('JAIME_TOKEN')
@@ -68,4 +69,4 @@ def _notify_work_end(id: str, status: StatusFinished):
     if result.status_code != 200:
         raise Exception(f'Error Jaime status code -> {result.status_code}')
 
-    logger().info(f'Proceso terminado -> {id}')
+    logger.log.info(f'Proceso terminado -> {id}')

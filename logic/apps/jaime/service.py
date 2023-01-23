@@ -6,9 +6,9 @@ from threading import Thread
 from typing import Dict
 
 import requests
-from logic.apps.admin.config import app
-from logic.apps.admin.config.variables import Vars, get_var
-from logic.libs.logger.logger import logger
+from logic.apps.admin.configs import app
+from logic.apps.admin.configs.variables import Vars, get_var
+from logic.libs.logger import logger
 
 _THREAD_CONNECTION_JAIME_ACTIVE = True
 _TIME_BETWEEN_REQUESTS_SECONDS = 3
@@ -36,8 +36,8 @@ def _thread_func():
                 connected_with_jaime = _get_token_ok()
 
         except Exception as e:
-            logger().error(e)
-            logger().error(
+            logger.log.error(e)
+            logger.log.error(
                 f'Error en conexion con Jaime -> reintentando en {_TIME_BETWEEN_REQUESTS_SECONDS} seg')
             connected_with_jaime = False
 
@@ -53,7 +53,7 @@ def _refresh_token_ok() -> bool:
     result = requests.get(url, verify=False, headers=headers)
 
     if result.status_code != 200:
-        logger().warning(
+        logger.log.warning(
             f'Error en conexion con Jaime -> {result.status_code}')
         return False
 
@@ -74,12 +74,12 @@ def _get_token_ok() -> bool:
     token = result.text
 
     if not token:
-        logger().warning(
+        logger.log.warning(
             f"Error en conexion con Jaime -> {result.status_code}")
         return False
 
     os.environ['JAIME_TOKEN'] = token
-    logger().info(
+    logger.log.info(
         f"Conexion exitosa con Jaime -> URL: {get_var(Vars.JAIME_URL)}")
     return True
 

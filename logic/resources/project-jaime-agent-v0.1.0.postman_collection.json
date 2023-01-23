@@ -12,7 +12,7 @@
 					"name": "v1",
 					"item": [
 						{
-							"name": "works",
+							"name": "jobs",
 							"item": [
 								{
 									"name": "exec",
@@ -50,14 +50,14 @@
 											]
 										},
 										"url": {
-											"raw": "{{project-jaime-agent}}/api/v1/works/",
+											"raw": "{{project-jaime-agent}}/api/v1/jobs/",
 											"host": [
 												"{{project-jaime-agent}}"
 											],
 											"path": [
 												"api",
 												"v1",
-												"works",
+												"jobs",
 												""
 											]
 										}
@@ -103,14 +103,14 @@
 											]
 										},
 										"url": {
-											"raw": "{{project-jaime-agent}}/api/v1/works/:id/logs",
+											"raw": "{{project-jaime-agent}}/api/v1/jobs/:id/logs",
 											"host": [
 												"{{project-jaime-agent}}"
 											],
 											"path": [
 												"api",
 												"v1",
-												"works",
+												"jobs",
 												":id",
 												"logs"
 											],
@@ -130,14 +130,14 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{project-jaime-agent}}/api/v1/works/:id/workspace",
+											"raw": "{{project-jaime-agent}}/api/v1/jobs/:id/workspace",
 											"host": [
 												"{{project-jaime-agent}}"
 											],
 											"path": [
 												"api",
 												"v1",
-												"works",
+												"jobs",
 												":id",
 												"workspace"
 											],
