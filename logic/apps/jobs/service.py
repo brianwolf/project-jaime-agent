@@ -1,5 +1,6 @@
 import os
 import subprocess
+import time
 from multiprocessing import Process
 from typing import Any, Dict, List
 
@@ -7,15 +8,17 @@ import requests
 
 from logic.apps.admin.configs.variables import Vars, get_var
 from logic.apps.filesystem import workingdir_service
+from logic.apps.jaime.service import get_token
 from logic.apps.jobs.model import StatusFinished
 from logic.libs.logger import logger
 
-_WORKS_RUNING: Dict[str, Process] = {}
+_JOBS_RUNING: Dict[str, Process] = {}
+_TIME_TO_REINTENT_SECONDS: int = 5
 
 
 def exec(id: str):
 
-    logger.log.info(f'Recibiendo proceso para ejecutar -> {id}')
+    logger.log.info(f'Recibe job to process id -> {id}')
 
     base_path = workingdir_service.fullpath(id)
 
@@ -25,8 +28,9 @@ def exec(id: str):
     process = Process(target=_thread_exec, args=(id, runner_script))
     process.start()
 
-    global _WORKS_RUNING
-    _WORKS_RUNING[id] = process
+    global _JOBS_RUNING
+    _JOBS_RUNING[id] = process
+    logger.log.info(f'Job started id -> {id}')
 
 
 def _thread_exec(id: str, runner_script: str):
@@ -40,33 +44,55 @@ def _thread_exec(id: str, runner_script: str):
 
     status = StatusFinished.SUCCESS if process.returncode == 0 else StatusFinished.ERROR
 
-    _notify_work_end(id, status)
+    _notify_job_end(id, status)
 
 
 def list_all_running() -> List[str]:
-    return _WORKS_RUNING.keys()
+    return _JOBS_RUNING.keys()
 
 
 def delete(id: str):
-    global _WORKS_RUNING
+    global _JOBS_RUNING
 
-    if id in _WORKS_RUNING:
-        _WORKS_RUNING[id].kill()
-        _WORKS_RUNING.pop(id)
+    if id in _JOBS_RUNING:
+
+        _JOBS_RUNING[id].kill()
+        _JOBS_RUNING.pop(id)
+        _kill_process()
+        logger.log.info(f'Job running was killed id -> {id}')
 
 
-def _notify_work_end(id: str, status: StatusFinished):
+def _kill_process():
+    processes = subprocess.run(
+        ['pgrep', 'python'], capture_output=True, text=True).stdout.split('\n')
+    pid = processes[len(processes)-2]
+    subprocess.run(['kill', '-9', pid], capture_output=True, text=True)
 
-    url = get_var(Vars.JAIME_URL) + f'/api/v1/jobs/{id}/finish'
-    body = {"status": status.value}
 
-    token = os.getenv('JAIME_TOKEN')
-    print(token)
-    headers = {'Authorization': f'Bearer {token}'}
+def _notify_job_end(id: str, status: StatusFinished):
 
-    result = requests.patch(url, json=body, timeout=5,
-                            verify=False, headers=headers)
-    if result.status_code != 200:
-        raise Exception(f'Error Jaime status code -> {result.status_code}')
+    keep_asking = True
+    while keep_asking:
+        try:
+            url = get_var(Vars.JAIME_URL) + f'/api/v1/jobs/{id}/finish'
+            body = {"status": status.value}
 
-    logger.log.info(f'Proceso terminado -> {id}')
+            token = get_token()
+            headers = {'Authorization': f'Bearer {token}'}
+
+            result = requests.patch(
+                url, json=body, timeout=5, verify=False, headers=headers)
+
+            if result.status_code != 200:
+                logger.log.warn(
+                    f'Error Jaime status code -> {result.status_code}')
+                time.sleep(_TIME_TO_REINTENT_SECONDS)
+                continue
+
+            keep_asking = False
+
+        except Exception as e:
+            logger.log.warn(e)
+            time.sleep(_TIME_TO_REINTENT_SECONDS)
+
+    logger.log.info(f'Finished Job id -> {id}')
