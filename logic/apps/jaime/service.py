@@ -6,12 +6,14 @@ from threading import Thread
 from typing import Dict
 
 import requests
+
 from logic.apps.admin.configs import app
 from logic.apps.admin.configs.variables import Vars, get_var
 from logic.libs.logger import logger
 
-_THREAD_CONNECTION_JAIME_ACTIVE = True
-_TIME_BETWEEN_REQUESTS_SECONDS = 3
+_THREAD_CONNECTION_JAIME_ACTIVE: bool = True
+_TIME_BETWEEN_REQUESTS_SECONDS: int = 3
+_TOKEN: str = None
 
 
 def connect_with_jaime():
@@ -46,9 +48,10 @@ def _thread_func():
 
 def _refresh_token_ok() -> bool:
 
+    global _TOKEN
+
     url = get_var(Vars.JAIME_URL) + '/api/v1/login/refresh'
-    token = os.getenv('JAIME_TOKEN')
-    headers = {'Authorization': f'Bearer {token}'}
+    headers = {'Authorization': f'Bearer {_TOKEN}'}
 
     result = requests.get(url, verify=False, headers=headers)
 
@@ -78,7 +81,9 @@ def _get_token_ok() -> bool:
             f"Error en conexion con Jaime -> {result.status_code}")
         return False
 
-    os.environ['JAIME_TOKEN'] = token
+    global _TOKEN
+    _TOKEN = token
+
     logger.log.info(
         f"Conexion exitosa con Jaime -> URL: {get_var(Vars.JAIME_URL)}")
     return True
@@ -104,3 +109,8 @@ def test_cluster(url, token, type) -> Dict[str, str]:
         'success': False,
         'text': 'Tipo de cluster no encontrado'
     }
+
+
+def get_token() -> str:
+    global _TOKEN
+    return _TOKEN

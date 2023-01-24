@@ -15,9 +15,9 @@ def update_requirements(content: str):
 
     filesystem_service.create_file(requirements_temp_path, content)
 
-    logger.log.info(f'Instalando dependencias de pip')
+    logger.log.info(f'Installing pip dependencies')
     subprocess.getoutput(f'pip install -r {requirements_temp_path}')
-    logger.log.info(f'Dependencias instaladas')
+    logger.log.info(f'Dependencies are installed')
 
 
 def get_logs() -> str:
