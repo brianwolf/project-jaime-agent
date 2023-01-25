@@ -13,19 +13,20 @@ agregar handlers para manejo automatico de errores, entre otros.
 """
 from flask import Flask
 from logic.libs.reflection import reflection
-from logic.libs.rest.src.errorHandler import load_generic_error_handler
+from logic.libs.rest.src.decorators import add_decorators
 from logic.libs.rest.src.json import config_encoders
 
 
-def config_flask_app(app) -> Flask:
+def setup(app: Flask, paths: list[str]):
     '''
     Configura la app de Flask
     '''
     app.config.setdefault('ERROR_INCLUDE_MESSAGE', False)
-    load_generic_error_handler(app)
+    add_decorators(app)
     config_encoders(app)
 
-    return app
+    for path in paths:
+        load_routes_by_regex_path(app, path)
 
 
 def load_routes_by_regex_path(app: Flask, path: str):

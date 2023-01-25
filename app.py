@@ -1,12 +1,12 @@
 #!env/bin/python
 from flask.app import Flask
 
-from logic.apps.admin.config.app import setup_id_agent
-from logic.apps.admin.config.logger import setup_loggers
-from logic.apps.admin.config.rest import setup_rest
-from logic.apps.admin.config.variables import Vars, setup_vars
-from logic.apps.jaime.services.jaime_service import connect_with_jaime
-from logic.libs.logger.logger import logger
+from logic.apps.admin.configs.app import setup_id_agent
+from logic.apps.admin.configs.logger import setup_loggers
+from logic.apps.admin.configs.rest import setup_rest
+from logic.apps.admin.configs.variables import Vars, setup_vars
+from logic.apps.jaime.service import connect_with_jaime
+from logic.libs.logger import logger
 from logic.libs.variables.variables import get_var
 
 setup_vars()
@@ -16,10 +16,10 @@ app = Flask(__name__)
 setup_rest(app)
 
 id_agent = setup_id_agent()
-logger().info(f'Agent ID -> {id_agent}')
+logger.log.info(f'Agent ID -> {id_agent}')
 connect_with_jaime()
 
-logger().info("""
+logger.log.info("""
 
                         ^Y?:    7J!.                                                                                                                                                
                         7##BPJ!^P#BGY!:                                                                                                                                             

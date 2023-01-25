@@ -19,6 +19,9 @@ def get_modules_paths(base_path: str) -> List[str]:
     Obtiene las rutas de todos los archivos .py dentro del directorio parametro, 
     es recursivo por lo que si hay carpetas dentro tambien busca ahi
     """
+    if os.path.isfile(base_path):
+        return [base_path]
+
     blueprints_routes = []
 
     for root, _, files in os.walk(base_path):

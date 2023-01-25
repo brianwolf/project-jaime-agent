@@ -2,8 +2,8 @@ import subprocess
 from datetime import datetime
 from pathlib import Path
 
-from logic.apps.filesystem.services import filesystem_service
-from logic.libs.logger.logger import logger
+from logic.apps.filesystem import filesystem_service
+from logic.libs.logger import logger
 
 _TEMP_REQUIREMENTS_FILE_PATH = '/tmp'
 _LOGS_FILE_PATH = f'{Path.home()}/.jaime-agent/logs/app.log'
@@ -15,9 +15,9 @@ def update_requirements(content: str):
 
     filesystem_service.create_file(requirements_temp_path, content)
 
-    logger().info(f'Instalando dependencias de pip')
+    logger.log.info(f'Installing pip dependencies')
     subprocess.getoutput(f'pip install -r {requirements_temp_path}')
-    logger().info(f'Dependencias instaladas')
+    logger.log.info(f'Dependencies are installed')
 
 
 def get_logs() -> str:

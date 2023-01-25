@@ -1,14 +1,15 @@
 
 from flask import Blueprint, request
-from logic.apps.works.services import work_service
 
-blue_print = Blueprint('works', __name__, url_prefix='/api/v1/works')
+from logic.apps.jobs import service
+
+blue_print = Blueprint('jobs', __name__, url_prefix='/api/v1/jobs')
 
 
 @blue_print.route('/<id>', methods=['POST'])
 def exec(id: str):
 
-    work_service.exec(id)
+    service.exec(id)
 
     return '', 201
 
@@ -16,5 +17,5 @@ def exec(id: str):
 @blue_print.route('/<id>', methods=['DELETE'])
 def delete(id: str):
 
-    work_service.delete(id)
+    service.delete(id)
     return '', 200

@@ -3,7 +3,8 @@ from os import walk
 from pathlib import Path
 from typing import Any, List
 from uuid import UUID, uuid4
-from logic.apps.admin.config.variables import Vars, get_var
+
+from logic.apps.admin.configs.variables import Vars, get_var
 
 _TEMP_PATH = get_var(Vars.WORKINGDIR_PATH)
 
