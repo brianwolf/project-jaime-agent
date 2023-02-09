@@ -1,6 +1,6 @@
 # COMPILER
 # ---------------------------------------------
-FROM python:3.9-slim as compiler
+FROM python:3.10-slim as compiler
 
 RUN mkdir -m 777 /home/jaime
 
@@ -15,7 +15,7 @@ RUN rm -fr dist/repo_modules_default
 
 # EXECUTION
 # ---------------------------------------------
-FROM python:3.9-slim
+FROM python:3.10-slim
 
 RUN apt-get update
 RUN apt-get install iputils-ping curl git wget procps -y
