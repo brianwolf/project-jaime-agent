@@ -1,12 +1,11 @@
 import subprocess
 from datetime import datetime
-from pathlib import Path
 
+from logic.apps.admin.configs.logger import get_logs_path
 from logic.apps.filesystem import filesystem_service
 from logic.libs.logger import logger
 
 _TEMP_REQUIREMENTS_FILE_PATH = '/tmp'
-_LOGS_FILE_PATH = f'{Path.home()}/.jaime-agent/logs/app.log'
 
 
 def update_requirements(content: str):
@@ -21,4 +20,4 @@ def update_requirements(content: str):
 
 
 def get_logs() -> str:
-    return filesystem_service.get_file_content(_LOGS_FILE_PATH)
+    return filesystem_service.get_file_content(get_logs_path())

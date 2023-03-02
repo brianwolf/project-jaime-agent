@@ -40,7 +40,7 @@ def _thread_func():
         except Exception as e:
             logger.log.error(e)
             logger.log.error(
-                f'Error en conexion con Jaime -> reintentando en {_TIME_BETWEEN_REQUESTS_SECONDS} seg')
+                f'Error Jaime connection -> retry {_TIME_BETWEEN_REQUESTS_SECONDS} sec')
             connected_with_jaime = False
 
         time.sleep(_TIME_BETWEEN_REQUESTS_SECONDS)
@@ -57,7 +57,7 @@ def _refresh_token_ok() -> bool:
 
     if result.status_code != 200:
         logger.log.warning(
-            f'Error en conexion con Jaime -> {result.status_code}')
+            f'Error Jaime connection -> {result.status_code}')
         return False
 
     return True
@@ -78,14 +78,14 @@ def _get_token_ok() -> bool:
 
     if not token:
         logger.log.warning(
-            f"Error en conexion con Jaime -> {result.status_code}")
+            f"Error Jaime connection -> {result.status_code}")
         return False
 
     global _TOKEN
     _TOKEN = token
 
     logger.log.info(
-        f"Conexion exitosa con Jaime -> URL: {get_var(Vars.JAIME_URL)}")
+        f"Connection successful -> URL: {get_var(Vars.JAIME_URL)}")
     return True
 
 
@@ -96,14 +96,14 @@ def disconnect_with_jaime():
 
 def test_cluster(url: str, token: str, type: str) -> Dict[str, str]:
 
+    success = False
+    text = f'Cluster with type {type} not supported'
+
     if type == 'OPENSHIFT':
         text = subprocess.getoutput(
             f"oc login --server={url} --token={token} --insecure-skip-tls-verify")
 
-        return {
-            'success': 'Logged into' in text,
-            'text': text
-        }
+        success = 'Logged into' in text
 
     if type == 'KUBERNETES':
 
@@ -132,14 +132,15 @@ def test_cluster(url: str, token: str, type: str) -> Dict[str, str]:
             """)
 
         text = subprocess.getoutput(f"kubectl get nodes")
-        return {
-            'success': 'Unable to connect' not in text,
-            'text': text
-        }
+        success = 'Unable to connect' not in text and 'Error' not in text
+
+    if not success:
+        logger.log.warn(
+            f'Error on connect to cluster {type} type -> {text}')
 
     return {
-        'success': False,
-        'text': 'Tipo de cluster no encontrado'
+        'success': success,
+        'text': text
     }
 
 
