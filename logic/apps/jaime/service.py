@@ -4,6 +4,7 @@ import time
 from pathlib import Path
 from threading import Thread
 from typing import Dict
+import os
 
 import requests
 
@@ -83,6 +84,7 @@ def _get_token_ok() -> bool:
 
     global _TOKEN
     _TOKEN = token
+    os.environ['JAIME_TOKEN'] = token
 
     logger.log.info(
         f"Connection successful -> URL: {get_var(Vars.JAIME_URL)}")
@@ -111,28 +113,27 @@ def test_cluster(url: str, token: str, type: str) -> Dict[str, str]:
 
         with open(f'{Path.home()}/.kube/config', 'w') as file:
             file.write(f""" 
-                apiVersion: v1
-                kind: Config
-                clusters:
-                - name: jaime
-                  cluster:
-                    insecure-skip-tls-verify: true
-                    server: {url}
-                users:
-                - name: jaime
-                  user:
-                    token: {token}
-                contexts:
-                - name: jaime
-                  context:
-                    cluster: jaime
-                    user: jaime
-                    namespace: default
-                current-context: jaime
-            """)
-
+apiVersion: v1
+kind: Config
+clusters:
+- name: jaime
+  cluster:
+    insecure-skip-tls-verify: true
+    server: {url}
+users:
+- name: jaime
+  user:
+    token: {token}
+contexts:
+- name: jaime
+  context:
+    cluster: jaime
+    user: jaime
+    namespace: default
+current-context: jaime
+""")
         text = subprocess.getoutput(f"kubectl get nodes")
-        success = 'Unable to connect' not in text and 'Error' not in text
+        success = 'Unable to connect' not in text and 'Error' not in text and 'refused' not in text
 
     if not success:
         logger.log.warn(

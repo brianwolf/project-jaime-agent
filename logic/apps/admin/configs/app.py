@@ -1,5 +1,4 @@
 import os
-from pathlib import Path
 from uuid import UUID, uuid4
 
 from logic.apps.admin.configs.variables import Vars, get_var
