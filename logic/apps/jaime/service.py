@@ -1,7 +1,7 @@
-import os
 import socket
 import subprocess
 import time
+from pathlib import Path
 from threading import Thread
 from typing import Dict
 
@@ -94,7 +94,7 @@ def disconnect_with_jaime():
     _THREAD_CONNECTION_JAIME_ACTIVE = False
 
 
-def test_cluster(url, token, type) -> Dict[str, str]:
+def test_cluster(url: str, token: str, type: str) -> Dict[str, str]:
 
     if type == 'OPENSHIFT':
         text = subprocess.getoutput(
@@ -102,6 +102,38 @@ def test_cluster(url, token, type) -> Dict[str, str]:
 
         return {
             'success': 'Logged into' in text,
+            'text': text
+        }
+
+    if type == 'KUBERNETES':
+
+        subprocess.getoutput(f'mkdir -p {Path.home()}/.kube')
+
+        with open(f'{Path.home()}/.kube/config', 'w') as file:
+            file.write(f""" 
+                apiVersion: v1
+                kind: Config
+                clusters:
+                - name: jaime
+                  cluster:
+                    insecure-skip-tls-verify: true
+                    server: {url}
+                users:
+                - name: jaime
+                  user:
+                    token: {token}
+                contexts:
+                - name: jaime
+                  context:
+                    cluster: jaime
+                    user: jaime
+                    namespace: default
+                current-context: jaime
+            """)
+
+        text = subprocess.getoutput(f"kubectl get nodes")
+        return {
+            'success': 'Unable to connect' not in text,
             'text': text
         }
 
