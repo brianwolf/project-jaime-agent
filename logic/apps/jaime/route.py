@@ -21,4 +21,5 @@ def delete():
 def cluster_test():
 
     s = request.json
-    return jsonify(service.test_cluster(s['url'], s['token'], s['type'])), 200
+    result = service.test_cluster(s['url'], s['token'], s['type'])
+    return jsonify(result.__dict__), 200

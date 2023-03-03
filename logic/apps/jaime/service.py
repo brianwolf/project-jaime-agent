@@ -1,15 +1,16 @@
+import os
 import socket
 import subprocess
 import time
 from pathlib import Path
 from threading import Thread
 from typing import Dict
-import os
 
 import requests
 
 from logic.apps.admin.configs import app
 from logic.apps.admin.configs.variables import Vars, get_var
+from logic.apps.jaime.model import TestClusterResult
 from logic.libs.logger import logger
 
 _THREAD_CONNECTION_JAIME_ACTIVE: bool = True
@@ -96,7 +97,7 @@ def disconnect_with_jaime():
     _THREAD_CONNECTION_JAIME_ACTIVE = False
 
 
-def test_cluster(url: str, token: str, type: str) -> Dict[str, str]:
+def test_cluster(url: str, token: str, type: str) -> TestClusterResult:
 
     success = False
     text = f'Cluster with type {type} not supported'
@@ -139,10 +140,7 @@ current-context: jaime
         logger.log.warn(
             f'Error on connect to cluster {type} type -> {text}')
 
-    return {
-        'success': success,
-        'text': text
-    }
+    return TestClusterResult(success, text)
 
 
 def get_token() -> str:
