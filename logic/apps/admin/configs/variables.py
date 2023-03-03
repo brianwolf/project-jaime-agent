@@ -12,6 +12,7 @@ class Vars(Enum):
     AGENT_TYPE = 'AGENT_TYPE'
     JAIME_URL = 'JAIME_URL'
     WORKINGDIR_PATH = 'WORKINGDIR_PATH'
+    JAIME_AGENT_HOME_PATH = 'JAIME_AGENT_HOME_PATH'
 
 
 def setup_vars():
