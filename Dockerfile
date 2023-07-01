@@ -2,13 +2,13 @@
 # ---------------------------------------------
 FROM python:3.10-slim as compiler
 
-RUN mkdir -m 777 /home/jaime
+USER root
 
 WORKDIR /home/jaime
 
-COPY . . 
-
 RUN pip install compile
+
+COPY . . 
 
 RUN python -m compile -b -f -o dist/ .
 RUN rm -fr dist/repo_modules_default
@@ -17,17 +17,20 @@ RUN rm -fr dist/repo_modules_default
 # ---------------------------------------------
 FROM python:3.10-slim
 
+USER root
+
 RUN apt-get update
 RUN apt-get install iputils-ping curl git wget procps -y
 
-RUN mkdir -m 777 /home/jaime
-
 WORKDIR /home/jaime
-ENV HOME=/home/jaime
 
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
 RUN rm -fr requirements.txt
+
+RUN useradd -ms /bin/bash -d /home/jaime 1001
+RUN chown -R 1001:0 /home/jaime
+USER 1001
 
 COPY --from=compiler /home/jaime/dist/ ./
 COPY logic/resources logic/resources

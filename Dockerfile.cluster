@@ -1,0 +1,15 @@
+ARG ARG_VERSION=local
+
+FROM ghcr.io/jaime-project/jaime-agent:${ARG_VERSION}
+
+ENV AGENT_TYPE=CLUSTER
+
+USER root
+
+ADD resources/kubectl.tar.gz . 
+RUN mv kubectl /usr/local/bin
+
+ADD resources/oc.tar.gz . 
+RUN mv oc /usr/local/bin
+
+USER 1001
