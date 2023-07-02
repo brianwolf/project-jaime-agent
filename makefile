@@ -1,7 +1,7 @@
-VERSION=1.12.0
+VERSION=1.13.0
 
 install i:
-	virtualenv -p python3.9 env
+	virtualenv -p python3.10 env
 	. env/bin/activate
 	timeout 1
 	pip install -r requirements.txt

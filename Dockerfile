@@ -8,7 +8,8 @@ WORKDIR /home/jaime
 
 RUN pip install compile
 
-COPY . . 
+COPY logic/ logic/
+COPY app.py app.py
 
 RUN python -m compile -b -f -o dist/ .
 RUN rm -fr dist/repo_modules_default
@@ -41,7 +42,7 @@ ENV VERSION=${ARG_VERSION}
 ENV PYTHON_HOST=0.0.0.0
 ENV PYTHON_PORT=7001
 ENV AGENT_TYPE=BASE
-ENV WORKINGDIR_PATH=/shared/workingdir
+ENV WORKINGDIR_PATH=.shared/workingdir/
 ENV TZ=America/Argentina/Buenos_Aires
 
 ENV EXTRA_CMD="cd ."
