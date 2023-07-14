@@ -8,4 +8,5 @@ dist/
 makefile
 .gitignore
 Dockerfile
+Dockerfile.*
 
