@@ -102,18 +102,10 @@ def test_cluster(url: str, token: str, type: str) -> TestClusterResult:
     success = False
     text = f'Cluster with type {type} not supported'
 
-    if type == 'OPENSHIFT':
-        text = subprocess.getoutput(
-            f"oc login --server={url} --token={token} --insecure-skip-tls-verify")
+    subprocess.getoutput(f'mkdir -p {Path.home()}/.kube')
 
-        success = 'Logged into' in text
-
-    if type == 'KUBERNETES':
-
-        subprocess.getoutput(f'mkdir -p {Path.home()}/.kube')
-
-        with open(f'{Path.home()}/.kube/config', 'w') as file:
-            file.write(f""" 
+    with open(f'{Path.home()}/.kube/config', 'w') as file:
+        file.write(f""" 
 apiVersion: v1
 kind: Config
 clusters:
@@ -133,8 +125,8 @@ contexts:
     namespace: default
 current-context: jaime
 """)
-        text = subprocess.getoutput(f"kubectl get nodes")
-        success = 'Unable to connect' not in text and 'Error' not in text and 'refused' not in text
+    text = subprocess.getoutput(f"kubectl get nodes")
+    success = 'Unable to connect' not in text and 'Error' not in text and 'refused' not in text
 
     if not success:
         logger.log.warn(
