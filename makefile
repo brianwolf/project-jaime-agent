@@ -1,4 +1,4 @@
-VERSION=1.13.0
+VERSION=0.1.0
 
 install i:
 	virtualenv -p python3.10 env
