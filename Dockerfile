@@ -44,6 +44,7 @@ ENV PYTHON_PORT=7001
 ENV AGENT_TYPE=BASE
 ENV WORKINGDIR_PATH=.shared/workingdir/
 ENV TZ=America/Argentina/Buenos_Aires
+ENV HOME=/home
 
 ENV EXTRA_CMD="cd ."
 CMD ${EXTRA_CMD} & python3 -m gunicorn -b ${PYTHON_HOST}:${PYTHON_PORT} --workers=1 --threads=4 app:app
