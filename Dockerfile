@@ -24,13 +24,14 @@ RUN apt-get update
 RUN apt-get install iputils-ping curl git wget procps -y
 
 WORKDIR /home/jaime
+ENV HOME=/home
 
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
 RUN rm -fr requirements.txt
 
 RUN useradd -ms /bin/bash -d /home/jaime 1001
-RUN chown -R 1001:0 /home/jaime
+RUN chmod 777 -R /home
 USER 1001
 
 COPY --from=compiler /home/jaime/dist/ ./
