@@ -1,8 +1,10 @@
+import importlib
 import os
 import subprocess
+import sys
 import time
 from multiprocessing import Process
-from typing import Any, Dict, List
+from typing import Dict, List
 
 import requests
 
@@ -14,18 +16,14 @@ from logic.libs.logger import logger
 
 _JOBS_RUNING: Dict[str, Process] = {}
 _TIME_TO_REINTENT_SECONDS: int = 5
+_RESOURCE_FOLDER_PATH: str = 'logic/apps/resources/'
 
 
 def exec(id: str):
 
     logger.log.info(f'Recibe job to process id -> {id}')
 
-    base_path = workingdir_service.fullpath(id)
-
-    runner_script = 'runner.pyc' if os.path.exists(
-        f'{base_path}/runner.pyc') else 'runner.py'
-
-    process = Process(target=_thread_exec, args=(id, runner_script))
+    process = Process(target=_thread_exec, args=[id])
     process.start()
 
     global _JOBS_RUNING
@@ -33,16 +31,24 @@ def exec(id: str):
     logger.log.info(f'Job started id -> {id}')
 
 
-def _thread_exec(id: str, runner_script: str):
+def _thread_exec(id: str):
 
     base_path = workingdir_service.fullpath(id)
 
-    cmd = f'cd {base_path} && python {runner_script}'
+    sys.path.append(base_path)
+    sys.path.append(os.path.join(os.getcwd(), _RESOURCE_FOLDER_PATH))
 
-    process = subprocess.Popen(cmd, shell=True)
-    process.wait()
+    os.chdir(base_path)
+    sys.stdout = open('logs.log', 'a')
+    sys.stderr = open('logs.log', 'a')
 
-    status = StatusFinished.SUCCESS if process.returncode == 0 else StatusFinished.ERROR
+    try:
+        importlib.import_module('module')
+        status = StatusFinished.SUCCESS
+        
+    except Exception as e:
+        print(e)
+        status = StatusFinished.ERROR
 
     _notify_job_end(id, status)
 
