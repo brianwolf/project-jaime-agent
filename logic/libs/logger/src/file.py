@@ -31,4 +31,6 @@ def make_logger(config) -> logging.Logger:
     logger.addHandler(fh)
     logger.addHandler(sh)
 
+    logging.getLogger('werkzeug').setLevel(logging.ERROR)
+
     return logger

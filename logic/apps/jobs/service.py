@@ -12,7 +12,7 @@ from logic.apps.admin.configs.variables import Vars, get_var
 from logic.apps.filesystem import workingdir_service
 from logic.apps.jaime.service import get_token
 from logic.apps.jobs.model import StatusFinished
-from logic.libs.logger import logger
+from logic.libs.logger.logger import log
 
 _JOBS_RUNING: Dict[str, Process] = {}
 _TIME_TO_REINTENT_SECONDS: int = 5
@@ -21,14 +21,14 @@ _RESOURCE_FOLDER_PATH: str = 'logic/apps/resources/'
 
 def exec(id: str):
 
-    logger.log.info(f'Recibe job to process id -> {id}')
+    log.info(f'Recibe job to process id -> {id}')
 
     process = Process(target=_thread_exec, args=[id])
     process.start()
 
     global _JOBS_RUNING
     _JOBS_RUNING[id] = process
-    logger.log.info(f'Job started id -> {id}')
+    log.info(f'Job started id -> {id}')
 
 
 def _thread_exec(id: str):
@@ -45,7 +45,7 @@ def _thread_exec(id: str):
     try:
         importlib.import_module('module')
         status = StatusFinished.SUCCESS
-        
+
     except Exception as e:
         print(e)
         status = StatusFinished.ERROR
@@ -65,7 +65,7 @@ def delete(id: str):
         _JOBS_RUNING[id].kill()
         _JOBS_RUNING.pop(id)
         _kill_process()
-        logger.log.info(f'Job running was killed id -> {id}')
+        log.info(f'Job running was killed id -> {id}')
 
 
 def _kill_process():
@@ -90,7 +90,7 @@ def _notify_job_end(id: str, status: StatusFinished):
                 url, json=body, timeout=5, verify=False, headers=headers)
 
             if result.status_code != 200:
-                logger.log.warn(
+                log.warn(
                     f'Error Jaime status code -> {result.status_code}')
                 time.sleep(_TIME_TO_REINTENT_SECONDS)
                 continue
@@ -98,7 +98,5 @@ def _notify_job_end(id: str, status: StatusFinished):
             keep_asking = False
 
         except Exception as e:
-            logger.log.warn(e)
+            log.warn(e)
             time.sleep(_TIME_TO_REINTENT_SECONDS)
-
-    logger.log.info(f'Finished Job id -> {id}')

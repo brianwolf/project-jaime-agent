@@ -2,7 +2,7 @@ import logging
 import os
 import subprocess
 from dataclasses import dataclass
-from logging.handlers import WatchedFileHandler
+from logging import FileHandler
 from pathlib import Path
 from typing import Dict, List
 from uuid import uuid4
@@ -78,11 +78,10 @@ def _get_server_client(server_name: str) -> "ServerClient":
 # LOGGER
 formatter = logging.Formatter(
     '%(asctime)s - %(name)s (%(process)d) - %(levelname)s - %(message)s')
-log = logging.getLogger()
-log.setLevel('INFO')
-fh = WatchedFileHandler(_LOG_FILE_NAME)
+fh = FileHandler(_LOG_FILE_NAME)
 fh.setLevel('INFO')
 fh.setFormatter(formatter)
+log = logging.getLogger()
 log.addHandler(fh)
 
 
