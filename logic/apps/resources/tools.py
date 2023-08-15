@@ -94,17 +94,24 @@ def ssh(server_name: str, cmd: str, echo: bool = False) -> str:
     server = _get_server_client(server_name)
 
     ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(hostname=server.host, username=server.user,
                 password=server.password, port=server.port)
     _, ssh_stdout, ssh_stderr = ssh.exec_command(cmd)
 
-    if echo and ssh_stdout:
-        log.info(ssh_stdout)
+    out = ssh_stdout.read().decode()
+    error = ssh_stderr.read().decode()
 
-    if echo and ssh_stderr:
-        log.info(ssh_stderr)
+    if echo and out:
+        log.info(out)
 
-    return ssh_stdout if ssh_stdout else ""
+    if echo and error:
+        log.info(error)
+
+    if error:
+        return error
+
+    return out
 
 
 def sh(cmd: str, echo: bool = False) -> str:
