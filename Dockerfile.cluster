@@ -6,10 +6,26 @@ ENV AGENT_TYPE=CLUSTER
 
 USER root
 
-ADD resources/kubectl.tar.gz . 
-RUN mv kubectl /usr/local/bin
+# KUBECTL
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+RUN install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
-ADD resources/oc.tar.gz . 
-RUN mv oc /usr/local/bin
+# OC
+RUN wget https://mirror.openshift.com/pub/openshift-v4/clients/ocp/4.13.13/openshift-client-linux.tar.gz
+RUN tar -xf openshift-client-linux.tar.gz
+RUN install -o root -g root -m 0755 oc /usr/local/bin/oc
+RUN rm -fr openshift-client-linux.tar.gz kubectl README.md
+
+# HELM
+RUN wget https://get.helm.sh/helm-canary-linux-amd64.tar.gz
+RUN tar -xf helm-canary-linux-amd64.tar.gz
+RUN mv linux-amd64/helm /usr/local/bin
+RUN rm -fr linux-amd64 helm-canary-linux-amd64.tar.gz
+
+# KUSTOMIZE
+RUN wget https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.1.1/kustomize_v5.1.1_linux_amd64.tar.gz
+RUN tar -xf kustomize_v5.1.1_linux_amd64.tar.gz
+RUN mv kustomize /usr/local/bin
+RUN rm -fr linux-amd64 kustomize_v5.1.1_linux_amd64.tar.gz
 
 USER 1001
