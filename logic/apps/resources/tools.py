@@ -128,10 +128,10 @@ def sh(cmd: str, echo: bool = False) -> str:
 
 def get_clusters_name() -> List[str]:
     try:
-        JAIME_URL = os.getenv('JAIME_URL')
+        jaime_url = os.getenv('JAIME_URL')
         token = os.getenv('JAIME_TOKEN')
         headers = {'Authorization': f'Bearer {token}'}
-        return requests.get(f'{JAIME_URL}/api/v1/clusters/', headers=headers).json()
+        return requests.get(f'{jaime_url}/api/v1/clusters/', headers=headers).json()
 
     except Exception as e:
         raise Exception('Error on get clusters')
@@ -139,12 +139,12 @@ def get_clusters_name() -> List[str]:
 
 def get_servers_name() -> List[str]:
     try:
-        JAIME_URL = os.getenv('JAIME_URL')
+        jaime_url = os.getenv('JAIME_URL')
         token = os.getenv('JAIME_TOKEN')
         headers = {'Authorization': f'Bearer {token}'}
-        return requests.get(f'{JAIME_URL}/api/v1/servers/', headers=headers).json()
+        return requests.get(f'{jaime_url}/api/v1/servers/', headers=headers).json()
 
-    except Exception as e:
+    except Exception as _:
         raise Exception('Error on get clusters')
 
 
@@ -207,7 +207,7 @@ def new_jaime_job(repo_name: str, module_name: str, agent_type: str, params: Dic
 
     yaml_str = str(yaml.dump(job_dict))
 
-    JAIME_URL = os.getenv('JAIME_URL')
+    jaime_url = os.getenv('JAIME_URL')
     token = os.getenv('JAIME_TOKEN')
     headers = {
         'Authorization': f'Bearer {token}',
@@ -215,7 +215,7 @@ def new_jaime_job(repo_name: str, module_name: str, agent_type: str, params: Dic
     }
 
     return requests.post(
-        url=f'{JAIME_URL}/api/v1/jobs/',
+        url=f'{jaime_url}/api/v1/jobs/',
         data=yaml_str,
         headers=headers
     ).text
@@ -235,14 +235,14 @@ def new_message(title: str, subject: str, body: str, files: list[str] = []) -> s
         'job': get_job_id()
     }
 
-    JAIME_URL = os.getenv('JAIME_URL')
+    jaime_url = os.getenv('JAIME_URL')
     token = os.getenv('JAIME_TOKEN')
     headers = {
         'Authorization': f'Bearer {token}'
     }
 
     return requests.post(
-        url=f'{JAIME_URL}/api/v1/messages/',
+        url=f'{jaime_url}/api/v1/messages/',
         json=message_dict,
         headers=headers
     ).text
