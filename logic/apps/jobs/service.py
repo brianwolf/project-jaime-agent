@@ -121,7 +121,7 @@ def _prepare_files_to_run(id: str) -> str:
 def _clean_files_to_run(id: str):
 
     list_files = [
-        'runner.py', 'runner.pyc', 'tools.py', 'tools.pyc', 'module.py', 'module.pyc', 'params.yaml'
+        'runner.py', 'runner.pyc', 'tools.py', 'tools.pyc', 'module.py', 'params.yaml'
     ]
 
     workingdir_path = workingdir_service.fullpath(id)
