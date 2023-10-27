@@ -76,13 +76,11 @@ def _get_server_client(server_name: str) -> "ServerClient":
 
 
 # LOGGER
-formatter = logging.Formatter(
-    '%(asctime)s - %(name)s (%(process)d) - %(levelname)s - %(message)s')
-fh = FileHandler(_LOG_FILE_NAME)
-fh.setLevel('INFO')
-fh.setFormatter(formatter)
+logging.basicConfig(
+    filename=_LOG_FILE_NAME,
+    format='%(asctime)s - %(name)s (%(process)d) - %(levelname)s - %(message)s',
+    level=logging.DEBUG)
 log = logging.getLogger()
-log.addHandler(fh)
 
 
 def ssh(server_name: str, cmd: str, echo: bool = False) -> str:

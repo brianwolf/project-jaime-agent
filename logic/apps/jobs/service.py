@@ -1,5 +1,6 @@
 import importlib
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -21,36 +22,33 @@ _RESOURCE_FOLDER_PATH: str = 'logic/apps/resources/'
 
 def exec(id: str):
 
-    log.info(f'Recibe job to process id -> {id}')
+    log.info(f'Recibing job to process id -> {id}')
 
     process = Process(target=_thread_exec, args=[id])
-    process.start()
 
     global _JOBS_RUNING
     _JOBS_RUNING[id] = process
-    log.info(f'Job started id -> {id}')
+
+    log.info(f'Job starting with id -> {id}')
+
+    process.start()
 
 
 def _thread_exec(id: str):
 
-    base_path = workingdir_service.fullpath(id)
+    workingdir_path = workingdir_service.fullpath(id)
 
-    sys.path.append(base_path)
-    sys.path.append(os.path.join(os.getcwd(), _RESOURCE_FOLDER_PATH))
+    runner_script = _prepare_files_to_run(id)
 
-    os.chdir(base_path)
-    sys.stdout = open('logs.log', 'a')
-    sys.stderr = open('logs.log', 'a')
+    cmd = f'cd {workingdir_path} && python {runner_script}'
 
-    try:
-        importlib.import_module('module')
-        status = StatusFinished.SUCCESS
+    process = subprocess.Popen(cmd, shell=True)
+    process.wait()
 
-    except Exception as e:
-        print(e)
-        status = StatusFinished.ERROR
+    status = StatusFinished.SUCCESS if process.returncode == 0 else StatusFinished.ERROR
 
     _notify_job_end(id, status)
+    _clean_files_to_run(id)
 
 
 def list_all_running() -> List[str]:
@@ -58,14 +56,16 @@ def list_all_running() -> List[str]:
 
 
 def delete(id: str):
-    global _JOBS_RUNING
 
+    global _JOBS_RUNING
     if id in _JOBS_RUNING:
 
         _JOBS_RUNING[id].kill()
         _JOBS_RUNING.pop(id)
         _kill_process()
         log.info(f'Job running was killed id -> {id}')
+
+    _clean_files_to_run(id)
 
 
 def _kill_process():
@@ -100,3 +100,32 @@ def _notify_job_end(id: str, status: StatusFinished):
         except Exception as e:
             log.warn(e)
             time.sleep(_TIME_TO_REINTENT_SECONDS)
+
+
+def _prepare_files_to_run(id: str) -> str:
+
+    runner_script = 'runner.pyc' if os.path.exists(
+        f'{_RESOURCE_FOLDER_PATH}/runner.pyc') else 'runner.py'
+
+    tools_script = 'tools.pyc' if os.path.exists(
+        f'{_RESOURCE_FOLDER_PATH}/tools.pyc') else 'tools.py'
+
+    workingdir_path = workingdir_service.fullpath(id)
+
+    shutil.copy(f'{_RESOURCE_FOLDER_PATH}/{runner_script}', workingdir_path)
+    shutil.copy(f'{_RESOURCE_FOLDER_PATH}/{tools_script}', workingdir_path)
+
+    return runner_script
+
+
+def _clean_files_to_run(id: str):
+
+    list_files = [
+        'runner.py', 'runner.pyc', 'tools.py', 'tools.pyc', 'module.py', 'module.pyc', 'params.yaml'
+    ]
+
+    workingdir_path = workingdir_service.fullpath(id)
+
+    for f in list_files:
+        if os.path.exists(f'{workingdir_path}/{f}'):
+            os.remove(f'{workingdir_path}/{f}')
