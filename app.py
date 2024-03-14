@@ -1,4 +1,7 @@
 #!env/bin/python
+import os
+import sys
+
 from flask.app import Flask
 
 from logic.apps.admin.configs.app import setup_id_agent
@@ -8,6 +11,10 @@ from logic.apps.admin.configs.variables import Vars, setup_vars
 from logic.apps.jaime.service import connect_with_jaime
 from logic.libs.logger import logger
 from logic.libs.variables.variables import get_var
+
+# pyinstaller
+if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+    os.chdir(sys._MEIPASS)
 
 setup_vars()
 setup_loggers()
@@ -20,7 +27,8 @@ logger.log.info(f'Agent ID -> {id_agent}')
 connect_with_jaime()
 
 with open('logic/resources/banner.txt', 'r') as f:
-    logger.log.info(f.read())
+    # logger.log.info(f.read())
+    print(f.read())
 
 
 if __name__ == "__main__":

@@ -7,4 +7,3 @@ JAIME_URL: http://localhost:5000
 AGENT_TYPE: BASE
 JAIME_AGENT_HOME_PATH: /tmp/jaime-agent
 WORKINGDIR_PATH: /tmp/workingdir
-USER: jaime
