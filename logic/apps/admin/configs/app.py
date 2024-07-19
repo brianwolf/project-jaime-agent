@@ -21,3 +21,14 @@ def setup_id_agent() -> UUID:
 def get_id_agent() -> UUID:
     with open(get_path_file_id(), 'r') as f:
         return f.read()
+
+
+def setup_directories():
+    if not os.path.exists(get_var(Vars.JAIME_AGENT_HOME_PATH)):
+        os.makedirs(get_var(Vars.JAIME_AGENT_HOME_PATH))
+
+    if not os.path.exists(get_var(Vars.WORKINGDIR_PATH)):
+        os.makedirs(get_var(Vars.WORKINGDIR_PATH))
+
+    if not os.path.exists(get_var(Vars.STORAGE_PATH)):
+        os.makedirs(get_var(Vars.STORAGE_PATH))

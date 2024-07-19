@@ -2,7 +2,6 @@ import logging
 import os
 import subprocess
 from dataclasses import dataclass
-from logging import FileHandler
 from pathlib import Path
 from typing import Dict, List
 from uuid import uuid4
@@ -15,6 +14,10 @@ import yaml
 # PRIVATE
 # ==========================================================
 
+# _WORKINGDIR_PATH = os.getenv("WORKINGDIR_PATH")
+# _STORAGE_PATH = os.getenv("STORAGE_PATH")
+_WORKINGDIR_PATH = "/tmp/jaime/workingdir"
+_STORAGE_PATH = "/tmp/jaime/storage"
 _PARAMS_FILE_NAME = 'params.yaml'
 _LOG_FILE_NAME = 'logs.log'
 
@@ -75,11 +78,11 @@ def _get_server_client(server_name: str) -> "ServerClient":
 # ==========================================================
 
 
-# LOGGER
 logging.basicConfig(
     filename=_LOG_FILE_NAME,
     format='%(asctime)s - %(name)s (%(process)d) - %(levelname)s - %(message)s',
-    level=logging.DEBUG)
+    level=logging.DEBUG
+)
 log = logging.getLogger()
 
 
@@ -244,3 +247,30 @@ def new_message(title: str, subject: str, body: str, files: list[str] = []) -> s
         json=message_dict,
         headers=headers
     ).text
+
+
+def workingdir_path() -> str:
+    return _WORKINGDIR_PATH
+
+
+def storage_path() -> str:
+    return _STORAGE_PATH
+
+
+def get_from_storage(sub_path: str) -> str:
+
+    full_path = f"{_STORAGE_PATH}/{sub_path}"
+
+    with open(full_path, 'r') as f:
+        return f.read()
+
+
+def save_in_storage(sub_path: str, content: str):
+
+    full_path = f"{_STORAGE_PATH}/{sub_path}"
+
+    if not os.path.exists(os.path.dirname(full_path)):
+        sh(f"mkdir -p {os.path.dirname(full_path)}")
+
+    with open(full_path, 'w') as f:
+        f.write(content)

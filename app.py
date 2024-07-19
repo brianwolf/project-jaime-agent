@@ -4,7 +4,7 @@ import sys
 
 from flask.app import Flask
 
-from logic.apps.admin.configs.app import setup_id_agent
+from logic.apps.admin.configs.app import setup_directories, setup_id_agent
 from logic.apps.admin.configs.logger import setup_loggers
 from logic.apps.admin.configs.rest import setup_rest
 from logic.apps.admin.configs.variables import Vars, setup_vars
@@ -16,11 +16,12 @@ from logic.libs.variables.variables import get_var
 if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
     os.chdir(sys._MEIPASS)
 
+app = Flask(__name__)
+
 setup_vars()
 setup_loggers()
-
-app = Flask(__name__)
 setup_rest(app)
+setup_directories()
 
 id_agent = setup_id_agent()
 logger.log.info(f'Agent ID -> {id_agent}')
