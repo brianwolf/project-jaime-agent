@@ -1,5 +1,7 @@
+# ---------------------------------------------
 # COMPILER
 # ---------------------------------------------
+
 FROM docker.io/library/python:3.11-slim as compiler
 
 USER root
@@ -15,8 +17,10 @@ RUN python -m compile -b -f -o dist/ .
 RUN rm -fr dist/env/
 
 
+# ---------------------------------------------
 # EXECUTION
 # ---------------------------------------------
+
 FROM docker.io/library/python:3.11-slim
 
 WORKDIR /home/jaime
@@ -46,8 +50,9 @@ ENV VERSION=${ARG_VERSION}
 ENV PYTHON_HOST=0.0.0.0
 ENV PYTHON_PORT=7001
 ENV AGENT_TYPE=BASE
-ENV JAIME_AGENT_HOME_PATH=local/
-ENV WORKINGDIR_PATH=shared/workingdir/
+ENV JAIME_AGENT_HOME_PATH=/home/jaime/agent
+ENV WORKINGDIR_PATH=/home/jaime/workingdir
+ENV STORAGE_PATH=/home/jaime/storage
 ENV TZ=America/Argentina/Buenos_Aires
 
 ENV EXTRA_CMD="cd ."

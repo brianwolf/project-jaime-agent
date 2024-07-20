@@ -1,4 +1,4 @@
-VERSION=0.3.0
+VERSION=0.4.0
 
 install i:
 	virtualenv -p python3.11 env
