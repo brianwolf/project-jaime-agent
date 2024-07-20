@@ -10,8 +10,8 @@ install i:
 
 build b:
 	podman build . -t ghcr.io/jaime-project/jaime-agent:$(VERSION) -f Dockerfile --build-arg ARG_VERSION=$(VERSION)
-	# podman build . -t ghcr.io/jaime-project/jaime-agent-cluster:$(VERSION) -f Dockerfile.cluster --build-arg ARG_VERSION=$(VERSION)
-	# podman build . -t ghcr.io/jaime-project/jaime-agent-pushgateway:$(VERSION) -f Dockerfile.pushgateway --build-arg ARG_VERSION=$(VERSION)
+	podman build . -t ghcr.io/jaime-project/jaime-agent-cluster:$(VERSION) -f Dockerfile.cluster --build-arg ARG_VERSION=$(VERSION)
+	podman build . -t ghcr.io/jaime-project/jaime-agent-pushgateway:$(VERSION) -f Dockerfile.pushgateway --build-arg ARG_VERSION=$(VERSION)
 
 
 push p:
