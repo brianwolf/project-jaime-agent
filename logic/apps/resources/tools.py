@@ -14,10 +14,8 @@ import yaml
 # PRIVATE
 # ==========================================================
 
-# _WORKINGDIR_PATH = os.getenv("WORKINGDIR_PATH")
-# _STORAGE_PATH = os.getenv("STORAGE_PATH")
-_WORKINGDIR_PATH = "/tmp/jaime/workingdir"
-_STORAGE_PATH = "/tmp/jaime/storage"
+_WORKINGDIR_PATH = os.getenv("WORKINGDIR_PATH")
+_STORAGE_PATH = os.getenv("STORAGE_PATH")
 _PARAMS_FILE_NAME = 'params.yaml'
 _LOG_FILE_NAME = 'logs.log'
 

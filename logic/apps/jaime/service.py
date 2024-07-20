@@ -69,7 +69,8 @@ def _get_token_ok() -> bool:
 
     url = get_var(Vars.JAIME_URL) + '/api/v1/agents/'
     payload = {
-        'host': socket.getfqdn(),
+        # 'host': socket.getfqdn(),
+        'host': socket.gethostbyname(socket.gethostname()),
         'port': get_var(Vars.PYTHON_PORT),
         'type': get_var(Vars.AGENT_TYPE).upper(),
         'id': app.get_id_agent()

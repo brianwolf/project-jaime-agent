@@ -6,7 +6,7 @@ FROM docker.io/library/python:3.11-slim as compiler
 
 USER root
 
-WORKDIR /home/jaime
+WORKDIR /home/src
 
 RUN pip install compile
 
@@ -23,7 +23,7 @@ RUN rm -fr dist/env/
 
 FROM docker.io/library/python:3.11-slim
 
-WORKDIR /home/jaime
+WORKDIR /home/src
 
 USER root
 
@@ -34,11 +34,11 @@ COPY requirements.txt ./
 RUN pip install -r requirements.txt
 RUN rm -fr requirements.txt
 
-COPY --from=compiler /home/jaime/dist/ .
+COPY --from=compiler /home/src/dist/ .
 COPY logic/resources/ logic/resources/
 
-RUN useradd -ms /bin/bash -d /home/jaime --uid 1001 jaime && \
-    chown -R 1001:0 /home/jaime
+RUN useradd -ms /bin/bash -d /home/src --uid 1001 jaime && \
+    chown -R 1001:0 /home/src
 
 USER 1001
 
@@ -50,7 +50,7 @@ ENV VERSION=${ARG_VERSION}
 ENV PYTHON_HOST=0.0.0.0
 ENV PYTHON_PORT=7001
 ENV AGENT_TYPE=BASE
-ENV JAIME_AGENT_HOME_PATH=/home/jaime/agent
+ENV JAIME_AGENT_HOME_PATH=/tmp/agent
 ENV WORKINGDIR_PATH=/home/jaime/workingdir
 ENV STORAGE_PATH=/home/jaime/storage
 ENV TZ=America/Argentina/Buenos_Aires

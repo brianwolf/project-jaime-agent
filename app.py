@@ -28,8 +28,8 @@ logger.log.info(f'Agent ID -> {id_agent}')
 connect_with_jaime()
 
 with open('logic/resources/banner.txt', 'r') as f:
-    # logger.log.info(f.read())
-    print(f.read())
+    logger.log.info(f.read())
+    # print(f.read())
 
 
 if __name__ == "__main__":
