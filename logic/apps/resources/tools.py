@@ -3,7 +3,6 @@ import os
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List
 from uuid import uuid4
 
 import paramiko
@@ -125,7 +124,7 @@ def sh(cmd: str, echo: bool = False) -> str:
     return result if result else ""
 
 
-def get_clusters_name() -> List[str]:
+def get_clusters_name() -> list[str]:
     try:
         jaime_url = os.getenv('JAIME_URL')
         token = os.getenv('JAIME_TOKEN')
@@ -136,7 +135,7 @@ def get_clusters_name() -> List[str]:
         raise Exception('Error on get clusters')
 
 
-def get_servers_name() -> List[str]:
+def get_servers_name() -> list[str]:
     try:
         jaime_url = os.getenv('JAIME_URL')
         token = os.getenv('JAIME_TOKEN')
@@ -147,7 +146,7 @@ def get_servers_name() -> List[str]:
         raise Exception('Error on get clusters')
 
 
-def get_params() -> Dict[str, object]:
+def get_params() -> dict[str, object]:
 
     with open(_PARAMS_FILE_NAME, 'r') as f:
         return yaml.load(f.read(), Loader=yaml.FullLoader)
@@ -195,7 +194,7 @@ current-context: jaime
     return 'Unable to connect' not in text and 'Error' not in text and 'refused' not in text
 
 
-def new_jaime_job(repo_name: str, module_name: str, agent_type: str, params: Dict[str, object] = {}, name: str = str(uuid4())) -> str:
+def new_jaime_job(repo_name: str, module_name: str, agent_type: str, params: dict[str, object] = {}, name: str = str(uuid4())) -> str:
 
     job_dict = {}
     job_dict['name'] = name
@@ -255,20 +254,20 @@ def storage_path() -> str:
     return _STORAGE_PATH
 
 
-def get_from_storage(sub_path: str) -> str:
+def get_from_storage(sub_path: str) -> bytes:
 
     full_path = f"{_STORAGE_PATH}/{sub_path}"
 
-    with open(full_path, 'r') as f:
+    with open(full_path, 'rb') as f:
         return f.read()
 
 
-def save_in_storage(sub_path: str, content: str):
+def save_in_storage(sub_path: str, content: bytes):
 
     full_path = f"{_STORAGE_PATH}/{sub_path}"
 
     if not os.path.exists(os.path.dirname(full_path)):
         sh(f"mkdir -p {os.path.dirname(full_path)}")
 
-    with open(full_path, 'w') as f:
+    with open(full_path, 'wb') as f:
         f.write(content)
