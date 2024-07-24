@@ -80,6 +80,7 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s (%(process)d) - %(levelname)s - %(message)s',
     level=logging.DEBUG
 )
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 log = logging.getLogger()
 
 

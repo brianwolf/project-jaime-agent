@@ -23,13 +23,15 @@ RUN rm -fr dist/env/
 
 FROM docker.io/library/python:3.11-slim
 
-RUN useradd -ms /bin/bash -d /home/src --uid 1001 jaime && \
-    mkdir -p /home/jaime/ && \
-    chown -R 1001:0 /home/jaime/
+USER root
+
+ENV HOME=/tmp/agent
+
+RUN mkdir -p /home/src && chmod -R 777 /home/src && \
+    mkdir -p /tmp/agent && chmod -R 777 /tmp/agent && \
+    mkdir -p /home/jaime/ && chmod -R 777 /home/jaime/
 
 WORKDIR /home/src
-
-USER root
 
 RUN apt-get update && \
     apt-get install iputils-ping curl git wget procps -y
