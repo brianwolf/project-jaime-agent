@@ -2,7 +2,7 @@
 # COMPILER
 # ---------------------------------------------
 
-FROM docker.io/library/python:3.11-slim as compiler
+FROM docker.io/library/python:3.11-slim AS compiler
 
 USER root
 
@@ -23,6 +23,10 @@ RUN rm -fr dist/env/
 
 FROM docker.io/library/python:3.11-slim
 
+RUN useradd -ms /bin/bash -d /home/src --uid 1001 jaime && \
+    mkdir -p /home/jaime/ && \
+    chown -R 1001:0 /home/jaime/
+
 WORKDIR /home/src
 
 USER root
@@ -37,12 +41,7 @@ RUN rm -fr requirements.txt
 COPY --from=compiler /home/src/dist/ .
 COPY logic/resources/ logic/resources/
 
-RUN useradd -ms /bin/bash -d /home/src --uid 1001 jaime && \
-    chown -R 1001:0 /home/src
-
 USER 1001
-
-RUN mkdir -p local/ shared/workingdir/
 
 ARG ARG_VERSION=local
 
