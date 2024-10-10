@@ -112,7 +112,7 @@ def ssh(server_name: str, cmd: str, echo: bool = False) -> str:
     return out
 
 
-def sh(cmd: str, echo: bool = False) -> str:
+def sh(cmd: str, echo: bool = True) -> str:
 
     if echo:
         log.info(cmd)
